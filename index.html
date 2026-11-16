@@ -8,7 +8,7 @@
   <title>Програма тренувань • 8 тижнів</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Tektur:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script>
@@ -16,12 +16,19 @@
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Tektur', 'Inter', 'sans-serif']
+          },
+          colors: {
+            volt: '#BFF205'
+          }
         }
       }
     };
   </script>
   <style>
+    .font-display { font-family: 'Tektur', 'Inter', sans-serif; }
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       background-color: #09090b;
@@ -70,22 +77,23 @@
     .anim-arrow { animation: arrowBeat 2s ease-in-out infinite; }
   </style>
 </head>
-<body class="min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-emerald-500/30">
+<body class="min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-[#BFF205]/30">
 
   <!-- Sticky Top Header -->
   <header class="sticky top-0 z-30 border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-md safe-top">
     <div class="mx-auto max-w-2xl px-4 py-3">
       <div class="flex items-center justify-between gap-2">
         <div class="min-w-0">
-          <h1 class="truncate text-base font-bold tracking-tight text-white sm:text-lg">Періодизація • 8 тижнів</h1>
-          <p id="header-subtitle" class="truncate text-xs text-zinc-400">Тиждень 1 • Тренування №1</p>
+          <h1 class="font-display truncate text-base font-bold uppercase tracking-wide text-white sm:text-lg">Періодизація • 8 тижнів</h1>
+          <p id="header-subtitle" class="truncate text-[11px] font-medium tracking-wide text-zinc-400">Тиждень 1 • Тренування №1</p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
-          <button id="btn-auto-timer" type="button" class="flex items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-300 transition active:scale-95">
-            <span id="auto-timer-dot" class="h-2 w-2 rounded-full bg-emerald-400"></span>
-            <span>Автотаймер</span>
-          </button>
-          <span id="workout-progress-badge" class="rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-400 border border-emerald-500/25">
+          <!-- Swipe Button for Auto-Timer -->
+          <div id="btn-auto-timer" role="switch" aria-checked="true" tabindex="0" class="relative flex h-8 w-[140px] cursor-pointer select-none items-center rounded-full border border-zinc-700 bg-zinc-900 p-1 transition-colors touch-pan-y">
+            <span id="auto-timer-label" class="w-full text-center font-display text-[9px] font-bold uppercase tracking-wider text-zinc-300 pointer-events-none">АВТОТАЙМЕР</span>
+            <span id="auto-timer-thumb" class="absolute left-1 top-1 flex h-6 w-8 items-center justify-center rounded-full bg-[#BFF205] text-[9px] font-extrabold text-zinc-950 shadow transition-transform duration-200 translate-x-[98px]">ON</span>
+          </div>
+          <span id="workout-progress-badge" class="font-display rounded-xl bg-[#BFF205]/15 px-2.5 py-1 text-xs font-bold text-[#BFF205] border border-[#BFF205]/30 tabular-nums">
             0/7
           </span>
         </div>
@@ -93,7 +101,7 @@
 
       <!-- Progress Bar -->
       <div class="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
-        <div id="workout-progress-bar" class="h-full rounded-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+        <div id="workout-progress-bar" class="h-full rounded-full bg-[#BFF205] transition-all duration-300" style="width: 0%"></div>
       </div>
     </div>
   </header>
@@ -124,7 +132,7 @@
       <!-- Active Workout Banner -->
       <div id="workout-banner" class="flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900/70 px-4 py-3">
         <div>
-          <h2 id="active-workout-title" class="text-sm font-bold text-white sm:text-base"></h2>
+          <h2 id="active-workout-title" class="font-display text-sm font-bold uppercase tracking-wide text-white sm:text-base"></h2>
           <p id="active-workout-meta" class="text-xs text-zinc-400"></p>
         </div>
         <button id="btn-quick-copy-prev" type="button" class="rounded-xl border border-zinc-700 bg-zinc-800/80 px-3 py-2 text-xs font-medium text-zinc-200 transition hover:bg-zinc-700 active:scale-95">
@@ -135,9 +143,52 @@
       <!-- Exercise List -->
       <div id="exercise-list" class="space-y-3.5"></div>
 
+      <!-- Cardio & Abs List + Add Cardio Dropdown -->
+      <div id="cardio-section" class="space-y-2.5 pt-1">
+        <div id="cardio-list" class="space-y-2"></div>
+
+        <div id="cardio-dropdown-panel" class="hidden rounded-2xl border border-zinc-700 bg-zinc-900/90 p-3.5 space-y-3">
+          <div>
+            <label for="cardio-type-select" class="mb-1 block text-xs font-semibold text-zinc-300">Обери кардіо або прес</label>
+            <select id="cardio-type-select" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm font-medium text-white focus:border-[#BFF205] focus:outline-none">
+              <option value="run">Біг</option>
+              <option value="walk">Ходьба</option>
+              <option value="bike">Ровер</option>
+              <option value="row">Гребля</option>
+              <option value="abs">Вправи на прес (в загальному)</option>
+            </select>
+          </div>
+
+          <div id="cardio-duration-wrap">
+            <label for="cardio-duration-input" class="mb-1 block text-xs font-medium text-zinc-400">Тривалість (хв)</label>
+            <input id="cardio-duration-input" type="number" inputmode="numeric" min="1" value="20" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm font-semibold text-white focus:border-[#BFF205] focus:outline-none" />
+          </div>
+
+          <div id="cardio-abs-wrap" class="hidden grid grid-cols-2 gap-2.5">
+            <div>
+              <label for="cardio-sets-input" class="mb-1 block text-xs font-medium text-zinc-400">Підходи</label>
+              <input id="cardio-sets-input" type="number" inputmode="numeric" min="1" value="3" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm font-semibold text-white focus:border-[#BFF205] focus:outline-none" />
+            </div>
+            <div>
+              <label for="cardio-reps-input" class="mb-1 block text-xs font-medium text-zinc-400">Повторення</label>
+              <input id="cardio-reps-input" type="number" inputmode="numeric" min="1" value="20" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm font-semibold text-white focus:border-[#BFF205] focus:outline-none" />
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="btn-cardio-save" type="button" class="flex-1 rounded-xl bg-[#BFF205] py-2.5 text-xs font-bold text-zinc-950 active:scale-95">Додати в тренування</button>
+            <button id="btn-cardio-cancel" type="button" class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-xs font-semibold text-zinc-300 active:scale-95">Скасувати</button>
+          </div>
+        </div>
+
+        <button id="btn-toggle-cardio" type="button" class="w-full rounded-2xl border-2 border-[#BFF205]/65 bg-[#BFF205]/10 px-5 py-3.5 text-sm font-bold text-[#BFF205] transition hover:bg-[#BFF205]/20 active:scale-[0.98]">
+          + Додати кардіо
+        </button>
+      </div>
+
       <!-- Finish Workout Button -->
-      <div class="pt-2 pb-4">
-        <button id="btn-finish-workout" type="button" class="w-full rounded-2xl bg-emerald-500 px-5 py-4 text-base font-extrabold text-zinc-950 shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-400 active:scale-[0.98]">
+      <div class="pt-1 pb-4">
+        <button id="btn-finish-workout" type="button" class="w-full rounded-2xl bg-[#BFF205] px-5 py-4 text-base font-extrabold text-zinc-950 shadow-lg shadow-[#BFF205]/15 transition hover:bg-[#d2ff28] active:scale-[0.98]">
           ✓ Завершити тренування
         </button>
       </div>
@@ -148,12 +199,12 @@
       <div class="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4 space-y-3">
         <div class="flex items-center justify-between">
           <h2 class="text-base font-bold text-white">Історія тренувань</h2>
-          <span id="history-count-badge" class="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-xs font-semibold text-emerald-400">0 сесій</span>
+          <span id="history-count-badge" class="rounded-full bg-[#BFF205]/15 border border-[#BFF205]/35 px-2.5 py-0.5 text-xs font-semibold text-[#BFF205]">0 сесій</span>
         </div>
         <div class="grid grid-cols-2 gap-2.5">
           <div class="rounded-xl bg-zinc-950 p-3 border border-zinc-800/80">
             <div class="text-[11px] text-zinc-400">Усього підходів</div>
-            <div id="hist-total-sets" class="mt-0.5 text-base font-bold text-emerald-400">0</div>
+            <div id="hist-total-sets" class="mt-0.5 text-base font-bold text-[#BFF205]">0</div>
           </div>
           <div class="rounded-xl bg-zinc-950 p-3 border border-zinc-800/80">
             <div class="text-[11px] text-zinc-400">Загальний тоннаж</div>
@@ -171,11 +222,11 @@
         <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           <div>
             <label for="progress-workout-select" class="mb-1 block text-xs font-medium text-zinc-400">Тренування</label>
-            <select id="progress-workout-select" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none"></select>
+            <select id="progress-workout-select" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-white focus:border-[#BFF205] focus:outline-none"></select>
           </div>
           <div>
             <label for="progress-exercise-select" class="mb-1 block text-xs font-medium text-zinc-400">Вправа</label>
-            <select id="progress-exercise-select" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none"></select>
+            <select id="progress-exercise-select" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-white focus:border-[#BFF205] focus:outline-none"></select>
           </div>
         </div>
       </div>
@@ -184,7 +235,7 @@
       <div class="grid grid-cols-3 gap-2.5">
         <div class="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-3 text-center">
           <div class="text-[11px] font-medium text-zinc-400">Макс. вага</div>
-          <div id="kpi-max-weight" class="mt-1 text-lg font-bold text-emerald-400">0 кг</div>
+          <div id="kpi-max-weight" class="mt-1 text-lg font-bold text-[#BFF205]">0 кг</div>
         </div>
         <div class="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-3 text-center">
           <div class="text-[11px] font-medium text-zinc-400">Тоннаж (макс)</div>
@@ -196,14 +247,71 @@
         </div>
       </div>
 
-      <!-- Chart -->
+      <!-- Exercise Weight Chart -->
       <div class="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4">
         <div class="mb-2 flex items-center justify-between">
           <span class="text-xs font-semibold text-zinc-300">Робоча вага по тижнях (кг)</span>
           <span id="chart-exercise-label" class="text-xs text-zinc-400 truncate max-w-[180px]"></span>
         </div>
-        <div class="relative h-72">
+        <div class="relative h-64">
           <canvas id="progress-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Calorie Expenditure Chart -->
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4">
+        <div class="mb-2 flex items-center justify-between">
+          <span class="text-xs font-semibold text-zinc-300">Крива витрати калорій (ккал)</span>
+          <span id="chart-calories-avg" class="text-xs text-amber-400 font-medium"></span>
+        </div>
+        <div class="relative h-64">
+          <canvas id="calories-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW: PROFILE -->
+    <section id="view-profile" class="hidden space-y-4">
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-5 space-y-4">
+        <div class="flex items-center gap-4">
+          <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-[#BFF205]/55 bg-zinc-950 flex items-center justify-center">
+            <img id="profile-avatar-img" src="" alt="Аватар" class="hidden h-full w-full object-cover" />
+            <span id="profile-avatar-placeholder" class="text-2xl font-extrabold text-[#BFF205]">М</span>
+          </div>
+          <div class="space-y-2">
+            <h2 id="profile-display-name" class="text-base font-bold text-white">Максим</h2>
+            <div class="flex flex-wrap gap-2">
+              <label class="cursor-pointer rounded-xl bg-[#BFF205]/15 border border-[#BFF205]/45 px-3 py-1.5 text-xs font-semibold text-[#BFF205] active:scale-95">
+                Змінити фото
+                <input id="profile-avatar-input" type="file" accept="image/*" class="hidden" />
+              </label>
+              <button id="profile-avatar-clear" type="button" class="hidden rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-400 active:scale-95">Видалити</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 pt-2 border-t border-zinc-800">
+          <div class="sm:col-span-2">
+            <label for="prof-nickname" class="mb-1 block text-xs font-medium text-zinc-400">Нікнейм</label>
+            <input id="prof-nickname" type="text" placeholder="Твій нікнейм" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm font-semibold text-white focus:border-[#BFF205] focus:outline-none" />
+          </div>
+          <div>
+            <label for="prof-age" class="mb-1 block text-xs font-medium text-zinc-400">Вік (років)</label>
+            <input id="prof-age" type="number" inputmode="numeric" min="10" max="100" placeholder="30" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm font-semibold text-white focus:border-[#BFF205] focus:outline-none" />
+          </div>
+          <div>
+            <label for="prof-weight" class="mb-1 block text-xs font-medium text-zinc-400">Вага (кг)</label>
+            <input id="prof-weight" type="number" inputmode="decimal" step="0.5" min="30" max="250" placeholder="85" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm font-semibold text-white focus:border-[#BFF205] focus:outline-none" />
+          </div>
+          <div class="sm:col-span-2">
+            <label for="prof-height" class="mb-1 block text-xs font-medium text-zinc-400">Зріст (см)</label>
+            <input id="prof-height" type="number" inputmode="numeric" min="100" max="240" placeholder="180" class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm font-semibold text-white focus:border-[#BFF205] focus:outline-none" />
+          </div>
+        </div>
+
+        <div id="profile-bmr-box" class="rounded-xl border border-zinc-800 bg-zinc-950 p-3 text-xs text-zinc-300 flex items-center justify-between">
+          <span>Базовий метаболізм (оцінка):</span>
+          <span id="profile-bmr-val" class="font-bold text-amber-400">— ккал/день</span>
         </div>
       </div>
     </section>
@@ -218,7 +326,7 @@
         <div id="data-stats" class="pt-2 grid grid-cols-2 gap-2.5">
           <div class="rounded-xl bg-zinc-950 p-3 border border-zinc-800/80">
             <div class="text-[11px] text-zinc-400">Виконано підходів</div>
-            <div id="stat-logged-sets" class="mt-0.5 text-base font-bold text-emerald-400">0</div>
+            <div id="stat-logged-sets" class="mt-0.5 text-base font-bold text-[#BFF205]">0</div>
           </div>
           <div class="rounded-xl bg-zinc-950 p-3 border border-zinc-800/80">
             <div class="text-[11px] text-zinc-400">Загальний тоннаж</div>
@@ -230,7 +338,7 @@
       <div class="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4 space-y-3">
         <h3 class="text-sm font-semibold text-white">Експорт та імпорт (JSON)</h3>
         <div class="flex flex-wrap gap-2">
-          <button id="btn-export-download" type="button" class="flex-1 min-w-[140px] rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-emerald-500 active:scale-95">
+          <button id="btn-export-download" type="button" class="flex-1 min-w-[140px] rounded-xl bg-[#BFF205] px-4 py-2.5 text-xs font-bold text-zinc-950 transition hover:bg-[#BFF205] active:scale-95">
             Завантажити JSON
           </button>
           <button id="btn-export-copy" type="button" class="flex-1 min-w-[140px] rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-xs font-semibold text-zinc-200 transition hover:bg-zinc-700 active:scale-95">
@@ -240,7 +348,7 @@
 
         <div class="pt-2 border-t border-zinc-800 space-y-2">
           <label for="import-json-input" class="block text-xs font-medium text-zinc-400">Встав JSON або обери файл для відновлення:</label>
-          <textarea id="import-json-input" rows="3" placeholder='{"logs": ...}' class="w-full rounded-xl border border-zinc-700 bg-zinc-950 p-2.5 text-xs text-zinc-200 placeholder-zinc-600 focus:border-emerald-500 focus:outline-none"></textarea>
+          <textarea id="import-json-input" rows="3" placeholder='{"logs": ...}' class="w-full rounded-xl border border-zinc-700 bg-zinc-950 p-2.5 text-xs text-zinc-200 placeholder-zinc-600 focus:border-[#BFF205] focus:outline-none"></textarea>
           <div class="flex flex-wrap gap-2">
             <button id="btn-import-apply" type="button" class="flex-1 rounded-xl bg-zinc-800 border border-zinc-700 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-zinc-700 active:scale-95">
               Відновити з тексту
@@ -268,45 +376,58 @@
 
   </main>
 
-  <!-- Floating Rest Timer Bar with Progress Bar -->
+  <!-- Floating Rest Timer Card (Circular Ring + Controls) -->
   <div id="rest-timer-bar" class="fixed bottom-[68px] left-0 right-0 z-30 hidden px-3 safe-bottom">
-    <div class="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-emerald-500/40 bg-zinc-900/95 shadow-2xl backdrop-blur-md">
-      <div class="flex items-center justify-between gap-3 px-4 py-2.5">
-        <div class="flex items-center gap-3 min-w-0">
-          <div class="flex h-10 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 font-extrabold text-sm tabular-nums" id="timer-display">01:30</div>
-          <div class="min-w-0">
-            <div class="text-xs font-semibold text-white">Відпочинок</div>
-            <div id="timer-exercise-name" class="text-[11px] text-zinc-400 truncate max-w-[140px] sm:max-w-[240px]"></div>
+    <div class="mx-auto max-w-2xl rounded-3xl border border-zinc-800 bg-[#121318]/95 p-3.5 shadow-2xl backdrop-blur-md">
+      <div class="flex items-center gap-4">
+        <!-- Circular Ring Progress (tap ring to pause/resume) -->
+        <button id="btn-timer-toggle" type="button" title="Пауза / Старт" class="relative flex h-[84px] w-[84px] shrink-0 items-center justify-center active:scale-95 transition">
+          <svg class="h-[84px] w-[84px] -rotate-90" viewBox="0 0 84 84">
+            <circle cx="42" cy="42" r="36" fill="none" stroke="#27272a" stroke-width="6"></circle>
+            <circle id="timer-ring-circle" cx="42" cy="42" r="36" fill="none" stroke="#BFF205" stroke-width="6" stroke-linecap="round" stroke-dasharray="226.19" stroke-dashoffset="0" class="transition-all duration-300"></circle>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center leading-none">
+            <span id="timer-display" class="font-display text-xl font-bold text-white tabular-nums">1:30</span>
+            <span id="timer-total-label" class="mt-0.5 text-[10px] font-medium text-zinc-400 tabular-nums">з 1:30</span>
+          </div>
+        </button>
+
+        <!-- Right Info & Action Pills -->
+        <div class="min-w-0 flex-1 space-y-2">
+          <div>
+            <div class="font-display text-[10px] font-bold uppercase tracking-widest text-[#BFF205]">ВІДПОЧИНОК</div>
+            <div id="timer-heading" class="mt-0.5 text-sm font-bold text-white leading-tight sm:text-base">Наступний підхід через 1:30</div>
+            <div id="timer-exercise-name" class="mt-0.5 truncate text-xs text-zinc-400">Дихай рівно, відновлюйся.</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btn-timer-add15" type="button" class="rounded-full border border-zinc-700 bg-zinc-800/90 px-4 py-1.5 text-xs font-bold text-white transition hover:bg-zinc-700 active:scale-95">+15 с</button>
+            <button id="btn-timer-stop" type="button" class="rounded-full border border-[#BFF205]/45 bg-[#BFF205]/15 px-4 py-1.5 text-xs font-bold text-[#BFF205] transition hover:bg-[#BFF205]/25 active:scale-95">Пропустити »</button>
           </div>
         </div>
-        <div class="flex items-center gap-1.5 shrink-0">
-          <button id="btn-timer-add15" type="button" class="rounded-lg border border-zinc-700 bg-zinc-800 px-2.5 py-1.5 text-xs font-semibold text-zinc-200 active:scale-95">+15с</button>
-          <button id="btn-timer-toggle" type="button" class="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white active:scale-95">Пауза</button>
-          <button id="btn-timer-stop" type="button" class="rounded-lg border border-zinc-700 bg-zinc-800 px-2.5 py-1.5 text-xs font-semibold text-zinc-400 active:scale-95">✕</button>
-        </div>
-      </div>
-      <div class="h-1.5 w-full bg-zinc-800">
-        <div id="timer-progress-bar" class="h-full bg-emerald-400 transition-all duration-300" style="width: 100%"></div>
       </div>
     </div>
   </div>
 
   <!-- Bottom Tab Navigation -->
   <nav class="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur-md safe-bottom">
-    <div class="mx-auto grid max-w-2xl grid-cols-4">
-      <button type="button" data-tab="workout" class="nav-tab flex flex-col items-center justify-center py-2.5 text-[11px] font-semibold text-emerald-400">
+    <div class="mx-auto grid max-w-2xl grid-cols-5">
+      <button type="button" data-tab="workout" class="nav-tab flex flex-col items-center justify-center py-2.5 text-[10px] font-semibold text-[#BFF205]">
         <svg class="mb-0.5 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"/></svg>
         <span>Тренування</span>
       </button>
-      <button type="button" data-tab="history" class="nav-tab flex flex-col items-center justify-center py-2.5 text-[11px] font-medium text-zinc-400">
+      <button type="button" data-tab="history" class="nav-tab flex flex-col items-center justify-center py-2.5 text-[10px] font-medium text-zinc-400">
         <svg class="mb-0.5 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <span>Історія</span>
       </button>
-      <button type="button" data-tab="progress" class="nav-tab flex flex-col items-center justify-center py-2.5 text-[11px] font-medium text-zinc-400">
+      <button type="button" data-tab="progress" class="nav-tab flex flex-col items-center justify-center py-2.5 text-[10px] font-medium text-zinc-400">
         <svg class="mb-0.5 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
         <span>Прогрес</span>
       </button>
-      <button type="button" data-tab="data" class="nav-tab flex flex-col items-center justify-center py-2.5 text-[11px] font-medium text-zinc-400">
+      <button type="button" data-tab="profile" class="nav-tab flex flex-col items-center justify-center py-2.5 text-[10px] font-medium text-zinc-400">
+        <svg class="mb-0.5 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+        <span>Профайл</span>
+      </button>
+      <button type="button" data-tab="data" class="nav-tab flex flex-col items-center justify-center py-2.5 text-[10px] font-medium text-zinc-400">
         <svg class="mb-0.5 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>
         <span>Дані</span>
       </button>
@@ -327,27 +448,31 @@
 
   <!-- Workout Summary Modal -->
   <div id="summary-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-    <div class="w-full max-w-sm rounded-3xl border border-emerald-500/40 bg-zinc-900 p-6 shadow-2xl space-y-4 text-center">
-      <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/20 text-3xl text-emerald-400">✓</div>
+    <div class="w-full max-w-sm rounded-3xl border border-[#BFF205]/45 bg-zinc-900 p-6 shadow-2xl space-y-4 text-center">
+      <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#BFF205]/20 text-3xl text-[#BFF205]">✓</div>
       <div>
         <h3 id="summary-title" class="text-lg font-extrabold text-white">Тренування завершено!</h3>
         <p id="summary-subtitle" class="mt-1 text-xs text-zinc-400"></p>
       </div>
-      <div class="grid grid-cols-3 gap-2 pt-1">
+      <div class="grid grid-cols-2 gap-2 pt-1">
         <div class="rounded-2xl bg-zinc-950 p-3 border border-zinc-800">
           <div class="text-[10px] text-zinc-400">Вправ</div>
           <div id="sum-exercises" class="mt-0.5 text-base font-bold text-white">0/0</div>
         </div>
         <div class="rounded-2xl bg-zinc-950 p-3 border border-zinc-800">
           <div class="text-[10px] text-zinc-400">Підходів</div>
-          <div id="sum-sets" class="mt-0.5 text-base font-bold text-emerald-400">0</div>
+          <div id="sum-sets" class="mt-0.5 text-base font-bold text-[#BFF205]">0</div>
         </div>
         <div class="rounded-2xl bg-zinc-950 p-3 border border-zinc-800">
           <div class="text-[10px] text-zinc-400">Тоннаж</div>
           <div id="sum-tonnage" class="mt-0.5 text-base font-bold text-amber-400">0 кг</div>
         </div>
+        <div class="rounded-2xl bg-zinc-950 p-3 border border-zinc-800">
+          <div class="text-[10px] text-zinc-400">Витрата калорій</div>
+          <div id="sum-calories" class="mt-0.5 text-base font-bold text-rose-400">~0 ккал</div>
+        </div>
       </div>
-      <button id="summary-close" type="button" class="w-full rounded-xl bg-emerald-500 py-3 text-sm font-bold text-zinc-950 active:scale-95">
+      <button id="summary-close" type="button" class="w-full rounded-xl bg-[#BFF205] py-3 text-sm font-bold text-zinc-950 active:scale-95">
         Чудово!
       </button>
     </div>
@@ -451,6 +576,7 @@
 
     const GUIDE_DATA = {
       w1_e1: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/hyperextension.gif',
         svg: 'hyperextension',
         img: 'https://titan.fitness/cdn/shop/files/roman-chair-back-hyperextension-machine-weighted-hyperextension.webp?v=1790193114&width=1445',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkA1ImzS25P_lxQI5dqQm_IkyuCU08cO3Quf4Fd5U20zGmDXhIB-6-rhg&s=10',
@@ -459,6 +585,7 @@
         tech: 'Гомілки під валиками, спина рівна. Опускайся на вдиху, піднімайся сідницями та спиною без перерозгинання.'
       },
       w1_e2: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Bent-Over-Row.gif',
         svg: 'barbell_row',
         img: 'https://app-media.fitbod.me/v2/44/images/angles/0.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2WXomyjej1cHnE0SMGRu2tgbvNNkFVMfuz5k7B7wlI8r6FBAgnK1Ocs4&s=10',
@@ -467,6 +594,7 @@
         tech: 'Коліна м’які, спина пряма. Тягни гриф уздовж стегон до пояса, зводячи лопатки.'
       },
       w1_e3: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Lever-T-bar-Row.gif',
         svg: 'lever_row',
         img: 'https://motionsports.de/cdn/shop/articles/T-Bar_Rudern_988b35b9-c272-4d9f-9036-05169a953a7e.jpg?v=1753116266',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoslgfDnbI4cGlKT6F_2ZhZHB3XFydiyOKCqL0E6_trJHQ0ssYKaWCNQ8&s=10',
@@ -475,6 +603,7 @@
         tech: 'Зафіксуй корпус, груди відкриті. Тягни важелі ліктями назад і зводь лопатки.'
       },
       w1_e4: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Lat-Pulldown.gif',
         svg: 'hammer_pulldown',
         img: 'https://fitnessinstitute.com.au/wp-content/uploads/2019/12/DSC02271.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSasPQcsaVBDdf6FX-yv0buNHQHSUp_YluwdzMB9ne7QRcQpB0WeXq5SQM&s=10',
@@ -483,6 +612,7 @@
         tech: 'Коліна під валиками. На видиху тягни рукоятки вниз, опускаючи плечі та зводячи лопатки.'
       },
       w1_e5: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Bench-Press.gif',
         svg: 'bench_press',
         img: 'https://weighttraining.guide/wp-content/uploads/2016/05/Barbell-Bench-Press-resized.png',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIQAF9hwS93Lw0sYabJqoXJyQbcSbZlz2oTShueKCwUN0HgyYjm-FU_o32&s=10',
@@ -491,6 +621,7 @@
         tech: 'Лопатки зведені, стопи на підлозі. Опусти гриф під контролем і витисни вгору без відриву тазу.'
       },
       w1_e6: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Press.gif',
         svg: 'dumbbell_bench',
         img: 'https://lifefitindia.com/wp-content/uploads/2025/01/dumbbell-bench-press.webp',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgD_39w5CPDI3LnMp_ojMQL_YpIwsSsmOI1rCWhW13c0YnkZr8Is6M2-wc&s=10',
@@ -499,6 +630,7 @@
         tech: 'Лікті під ~45° до корпусу. Розтягуй грудні внизу і тисни вгору без різкого зведення.'
       },
       w1_e7: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/09/Triceps-Dip-Machine.gif',
         svg: 'hammer_dip',
         img: 'https://i.vimeocdn.com/video/1975439660-26376579ae2f558befe7bf162ce905f30b8707ce47801c37dc05fd90b08ff0df-d?f=webp',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNVoc18dOpno2-P-BoTnJ2u8nqL-18aQl-gR0hiSAd_i7JAgofp3EJUJ2v&s=10',
@@ -508,6 +640,7 @@
       },
 
       w2_e1: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif',
         svg: 'seated_db_press',
         img: 'https://weighttraining.guide/wp-content/uploads/2016/05/Dumbbell-Shoulder-Press-resized.png',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-om1EJNJrSoMzVe8XQP_zfGOs1P4uNO2tb5tdvOpBuo0mU0UFTukZUgs&s=10',
@@ -516,6 +649,7 @@
         tech: 'Поперек притиснутий до спинки. Тисни гантелі вгору над плечима, плавно опускай до вух.'
       },
       w2_e2: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif',
         svg: 'lateral_raise',
         img: 'https://repfitness.com/cdn/shop/articles/Delta_Shirt.jpg?v=1767201616&width=1100',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIHg1GeVDRc81QtcKoq6ZLBqiv1_c_NZNkHGkQm2AUTe7UooqzBdr3nZ0&s=10',
@@ -524,6 +658,7 @@
         tech: 'Лікті трохи зігнуті. Веди рух ліктями в сторони (мізинець трохи вище великого пальця).'
       },
       w2_e3: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/cable-rear-delt-fly.gif',
         svg: 'rear_delt_fly',
         img: 'https://s3.amazonaws.com/prod.skimble/assets/3114422/image_iphone.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8MseEiXA2qtQO3ZkQXWJxOh2SUZYqhpH-xk2eiVrIypii0CxqFScSErXS&s=10',
@@ -532,6 +667,7 @@
         tech: 'Спина рівна, руки на рівні плечей. Відводь руки назад задньою дельтою, не перевантажуючи трапецію.'
       },
       w2_e4: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/08/Lever-Horizontal-Leg-Press.gif',
         svg: 'leg_press',
         img: 'https://www.puregym.com/media/c4ep0moy/45-degree-leg-press.png?quality=80',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMLsTfsnDjH-QknfefDavnfb2eMT_yiXQFw_XSDjbM0XWMvPXFNZ2OLyXN&s=10',
@@ -540,6 +676,7 @@
         tech: 'Таз і поперек притиснуті до спинки! Опускай до ~90° в колінах, тисни п’ятами без замикання колін.'
       },
       w2_e5: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/LEG-EXTENSION.gif',
         svg: 'leg_extension',
         img: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/LEG-EXTENSION.gif',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4uahZwr3nEVkdsWWvbZ0Qsmum85jJUjXOmb8TaT7iqGDJ5Qkopdpqqo2D&s=10',
@@ -548,6 +685,7 @@
         tech: 'Вісь тренажера навпроти колін. Розгинай ноги на видиху, затримай на 1 сек вгорі.'
       },
       w2_e6: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/08/Seated-Leg-Curl.gif',
         svg: 'seated_leg_curl',
         img: 'https://ca.repfitness.com/cdn/shop/articles/Seated-Leg-Curl.jpg?v=1788453319&width=3600',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRx8CCLoeGCHabr5kcAwzJJ80PCCb8fjtfrdXT3Egg_WozaZLwIS5HGHxqq&s=10',
@@ -556,6 +694,7 @@
         tech: 'Зафіксуй стегна верхнім валиком. Тягни нижній валик під себе задньою поверхнею стегна.'
       },
       w2_e7: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/09/Donkey-Calf-Raise.gif',
         svg: 'donkey_calf',
         img: 'https://watsongym.co.uk/wp-content/uploads/2023/03/donkey-calf-raise-1-600x600.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZyp6TGFR76NeLWwTUWpRIAZDZaEQwZL63BO-hpGDVf1QCFMS7RaMh2q9_&s=10',
@@ -565,6 +704,7 @@
       },
 
       w3_e1: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Curl.gif',
         svg: 'barbell_curl',
         img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQfSS36z6xFyeGFRLfLTLYz5pabIEJKxSp5bPPJFZEGqOWY6K93FUetcUS&s=10',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQfSS36z6xFyeGFRLfLTLYz5pabIEJKxSp5bPPJFZEGqOWY6K93FUetcUS&s=10',
@@ -573,6 +713,7 @@
         tech: 'Лікті притиснуті до боків і не йдуть вперед. Піднімай без розгойдування корпусом.'
       },
       w3_e2: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2022/06/Seated-dumbbell-alternating-curl.gif',
         svg: 'seated_db_curl',
         img: 'https://cdn.yanrefitness.com/cdn-cgi/imagedelivery/m94-xP3Y6Xwv_FOE9Rj47w/www.yanrefitness.com/2023/10/Seated-Bicep-Curl-6-1.jpg/w=9999',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJ9mAbpSa8QJFbQxZx9SU7h4ojiUJRxyU4GQTBuq1KAl8K3F11daYCaw2O&s=10',
@@ -581,6 +722,7 @@
         tech: 'Спина притиснута, лікті нерухомі. Піднімай гантелі, розвертаючи долоні вгору.'
       },
       w3_e3: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/04/Lever-Preacher-Curl.gif',
         svg: 'preacher_curl',
         img: 'https://i0.wp.com/www.muscleandfitness.com/wp-content/uploads/2013/04/larry-scott-arms-plan.jpg?quality=86&strip=all',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7rE4bQqd_XBnm9OmAWc-axV_e74sMvCj2c6PzNmhUbmbYRDXxKI-0iZm_&s=10',
@@ -589,6 +731,7 @@
         tech: 'Пахви та задня поверхня плеча щільно на подушці. Опускай майже до кінця без ривка в лікті.'
       },
       w3_e4: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Triceps-Dips.gif',
         svg: 'tricep_dips',
         img: 'https://i0.wp.com/www.muscleandfitness.com/wp-content/uploads/2025/08/Fit-muscular-man-performing-parallel-bar-dips-at-the-gym-to-build-his-chest-shoulders-and-tricep-muscles.jpg?w=1109&h=614&crop=1&quality=86&strip=all',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStOXjxx-vDxTInKitkqgrx7i3S0P-n-LmhVVd-6KKYjiDyEqDwUvuwzh81&s=10',
@@ -597,6 +740,7 @@
         tech: 'Тримай корпус вертикально (без нахилу вперед), лікті рухаються строго назад уздовж тіла.'
       },
       w3_e5: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Triceps-Extension.gif',
         svg: 'skull_crusher',
         img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7vdQ1gXIGDGpidVBlVtf6zVYdaaX00PPbEDpIEb-KMq6GVebkThbktuBO&s=10',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7vdQ1gXIGDGpidVBlVtf6zVYdaaX00PPbEDpIEb-KMq6GVebkThbktuBO&s=10',
@@ -605,6 +749,7 @@
         tech: 'Плечі зафіксовані. Працюють лише лікті: опускай гриф під контролем і розгинай руки вгору.'
       },
       w3_e6: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Pushdown.gif',
         svg: 'cable_pushdown',
         img: 'https://trainingstation.co.uk/cdn/shop/articles/Tricep-pushdown-movement_ddb8dbd8-566d-4f55-99e0-36c35790234a_1224x.png?v=1739005533',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0QfCB85IUArLfaSnxL4PIGalT5mVU6znLu0eYOXg7sdn2gJGlVm5H-I4&s=10',
@@ -614,6 +759,7 @@
       },
 
       w4_e1: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Barbell-Bench-Press.gif',
         svg: 'incline_bench',
         img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxFb76YMGFXxGwLAXlmqzRjeXh68qUZ9wwKdyyQO59l3OULB7fMcmbjos&s=10',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxFb76YMGFXxGwLAXlmqzRjeXh68qUZ9wwKdyyQO59l3OULB7fMcmbjos&s=10',
@@ -622,6 +768,7 @@
         tech: 'Лопатки зведені. Опускай гриф до верхньої частини грудей (ближче до ключиць) і тисни вгору.'
       },
       w4_e2: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/06/Lever-Chest-Press.gif',
         svg: 'hammer_chest_press',
         img: 'https://app-media.fitbod.me/v2/159/images/landscape/0_960x540.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvg3sX6xixbIUpCH9o2jckacpCeWAqmwMOXo9uBoiYEBWkJTQhTQctfOU&s=10',
@@ -630,6 +777,7 @@
         tech: 'Лопатки притиснуті до спинки. Витискай рукоятки вперед, зводячи грудні м’язи.'
       },
       w4_e3: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-dumbbell-Fly.gif',
         svg: 'incline_fly',
         img: 'https://julielohre.com/wp-content/uploads/2023/03/DumbellInclineFly-scaled.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVhxRCASX6yNZp_UpmdsBCQiug0zyN44YU9wFHO0v385yAf-DhWfLDyovA&s=10',
@@ -638,6 +786,7 @@
         tech: 'Лікті трохи зігнуті й зафіксовані. Розтягуй грудні на вдиху, зводь руки по широкій дузі.'
       },
       w4_e4: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2022/08/band-assisted-pull-up.gif',
         svg: 'graviton_pullup',
         img: 'https://app.aspira-fitness.com/api/media/db59a601-76a9-409e-850b-9baca5de790a',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4HyPfHhODOiy0ByiR4RP4Gj7t4pnN-smokLXxOXgtVEACY9wHdieZGcg&s=10',
@@ -646,6 +795,7 @@
         tech: 'Долоні одна до одної. Тягнися грудьми до перекладини, опускаючи плечі та зводячи лопатки.'
       },
       w4_e5: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/04/Reverse-Grip-Barbell-Row.gif',
         svg: 'yates_row',
         img: 'https://tigerfitness.com/cdn/shop/articles/How_to_Perform_the_Yates_Row_or_Reverse_Grip_Bent_Over_Row.png?v=1786127726&width=1400',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBJ3qrdRg24HEGscy2bAdCxeHEuvab_EbF1o8cRUyWBX_lSExlz921Yz1D&s=10',
@@ -654,6 +804,7 @@
         tech: 'Корпус вище, ніж у класичній тязі. Тягни вагу вздовж стегон до пояса, акцентуючи найширші.'
       },
       w4_e6: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/06/Rope-Straight-Arm-Pulldown.gif',
         svg: 'rope_pullover',
         img: 'https://api.smartworkout.app/asset/image/4977ee02-11c1-4028-8a97-310c8dec6cc3',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOIQkg4fZlb6bLCCUo_-yDIkzdnIIQEukoEQrfnvTEc5z4_V2pj33xX-sr&s=10',
@@ -663,6 +814,7 @@
       },
 
       w5_e1: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/07/Barbell-Standing-Military-Press.gif',
         svg: 'ohp_barbell',
         img: 'https://images.ctfassets.net/8urtyqugdt2l/5LT4SuTChyxuYe23lmxcHM/f74493cd1ba46eb4f42c8d3b941f86b9/desktop-overhead-press.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn3hXdJ-kDwUhi2el6tCs3lrlHdSARkerDY-HIT88xnbM4vL2pe5O4tkwU&s=10',
@@ -671,6 +823,7 @@
         tech: 'Прес і сідниці напружені (не прогинай поперек). Тисни штангу строго вгору над головою.'
       },
       w5_e2: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/09/Dumbbell-Seated-Bent-Over-Rear-Delt-Row.gif',
         svg: 'prone_db_fly',
         img: 'https://liftmanual.com/wp-content/uploads/2023/04/dumbbell-incline-rear-fly.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm3FJzhKQrvtm5MX4K-yQG1mG3dAbxjJDMGHd-N0pWLH6wlVogHu-o_cI&s=10',
@@ -679,6 +832,7 @@
         tech: 'Лежачи грудьми на лавці, розводь гантелі в сторони на задню дельту без ривків.'
       },
       w5_e3: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/barbell-uprightrow.gif',
         svg: 'upright_row',
         img: 'https://i0.wp.com/www.muscleandfitness.com/wp-content/uploads/2020/01/Widegripuprightrows.jpg?quality=86&strip=all',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIebaBwakeyKxSaZgCysXFHZ5EceEdShma697rlYZXIbX0wwGu4Qg3Zqo&s=10',
@@ -687,6 +841,7 @@
         tech: 'Хват ширший за плечі. Тягни лікті вгору і в сторони до рівня грудей (лікті вище кистей).'
       },
       w5_e4: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/BARBELL-SQUAT.gif',
         svg: 'squat',
         img: 'https://images.ctfassets.net/8urtyqugdt2l/T1ib5OAlfcQx5UOdjEhcD/d291f29fdc46c7b4dd559038b2b3e42a/power-back-squat-desktop.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN3wqk5l0YCg6tugqeVcm0AZbHSuhvX3cx1OVtVdwilrXPOMAwT0wEPWq8&s=10',
@@ -695,6 +850,7 @@
         tech: 'Спина рівна, коліна в напрямку носків. Присідай до паралелі стегна з підлогою і тисни п’ятами.'
       },
       w5_e5: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/LEG-EXTENSION.gif',
         svg: 'leg_extension',
         img: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/LEG-EXTENSION.gif',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4uahZwr3nEVkdsWWvbZ0Qsmum85jJUjXOmb8TaT7iqGDJ5Qkopdpqqo2D&s=10',
@@ -703,6 +859,7 @@
         tech: 'Вісь тренажера навпроти колін. Розгинай ноги на видиху, затримай на 1 сек вгорі.'
       },
       w5_e6: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2022/04/Lying-Dumbbell-Leg-Curl.gif',
         svg: 'lying_leg_curl',
         img: 'https://ca.repfitness.com/cdn/shop/articles/lying-leg-curl.jpg?v=1770147928&width=3600',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVyhbtuULUkOa0q9MWc3YY-m1LgReSIQl6JV8_w3Y8Ln2iFlYbik4_qPg&s=10',
@@ -711,6 +868,7 @@
         tech: 'Таз щільно притиснутий до лавки. Підтягуй валик до сідниць і плавно опускай.'
       },
       w5_e7: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/06/Lever-Seated-Calf-Raise.gif',
         svg: 'seated_calf',
         img: 'https://www.puregym.com/media/un3nhxfs/seated-calf-raise.jpg?quality=80',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtwKnxgkYkqhmCMOyUkm3Vn2VbL0VB2zjJaotZYK-cfzT0slHowirOkDQH&s=10',
@@ -720,6 +878,7 @@
       },
 
       w6_e1: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/06/Smith-Machine-Bench-Press.gif',
         svg: 'smith_close_grip',
         img: 'https://app-media.fitbod.me/v2/343/images/landscape/0_960x540.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2hR1zY71PeRr45FatVZ2SqbCj0bqXiZK_HWq3esszH1zC9zOfeqG7bMQ&s=10',
@@ -728,6 +887,7 @@
         tech: 'Хват на ширині плечей, лікті близько до корпусу. Тисни вгору тріцепсом.'
       },
       w6_e2: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/09/Triceps-Dip-Machine.gif',
         svg: 'hammer_dip',
         img: 'https://i.vimeocdn.com/video/1975439660-26376579ae2f558befe7bf162ce905f30b8707ce47801c37dc05fd90b08ff0df-d?f=webp',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNVoc18dOpno2-P-BoTnJ2u8nqL-18aQl-gR0hiSAd_i7JAgofp3EJUJ2v&s=10',
@@ -736,6 +896,7 @@
         tech: 'Спина рівно притиснута до спинки, лікті назад. Тисни вниз до повного розгинання.'
       },
       w6_e3: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Tricep-Kickback.gif',
         svg: 'cable_kickback',
         img: 'https://cdn.motra.com/assets/7c87c73d5d/mediumThumbnail.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLditnU3i67d29y2Av_S27A2d-6ZJqkYWPN-Lj4svCy6RhZR0OPqDcsi4&s=10',
@@ -744,6 +905,7 @@
         tech: 'Нахили корпус, притисни лікоть до боку. Розгинай руку назад, не опускаючи лікоть.'
       },
       w6_e4: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2022/04/Double-Arm-Dumbbell-Curl.gif',
         svg: 'db_curl_supination',
         img: 'https://i.ytimg.com/vi/48ORDkT24tY/maxresdefault.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPBcBzr61cuwikbTm73nMjfAmrVeugjpbEqjvCYWZno0bgOaIz1o0NFZNt&s=10',
@@ -752,6 +914,7 @@
         tech: 'Унизу долоні до стегон, під час підйому плавно розвертай кисть мізинцем вгору.'
       },
       w6_e5: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif',
         svg: 'hammer_curl',
         img: 'https://cdn.muscleandstrength.com/sites/default/files/standing-hammer-curl.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJWA0CUm1CA9u8xR27gpt-9P3tx7Pq0Nd7mWIY3L4Y1KTs_CZe2kwPw8mX&s=10',
@@ -760,6 +923,7 @@
         tech: 'Тримай гантелі як молотки весь рух без розвороту кисті, лікті нерухомі.'
       },
       w6_e6: {
+        gif: 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Reverse-Curl.gif',
         svg: 'reverse_curl',
         img: 'https://cdn.muscleandstrength.com/sites/default/files/reverse-grip-barbell-curl.jpg',
         thumb: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7DSs2xFSfaFtu0m7crB-hDmgGhG0o7oXWDynCKfOOlmvCih9zTtlm0do&s=10',
@@ -773,7 +937,7 @@
       const defs = `
         <defs>
           <marker id="arrG" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-            <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981"/>
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#BFF205"/>
           </marker>
         </defs>
       `;
@@ -795,7 +959,7 @@
               <path d="M 122 90 L 128 102" stroke="#d4d4d8" stroke-width="4" stroke-linecap="round"/>
               <circle cx="128" cy="104" r="5" fill="#f59e0b"/>
             </g>
-            <path d="M 148 94 Q 162 72 146 52" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 148 94 Q 162 72 146 52" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -813,7 +977,7 @@
               <circle cx="96" cy="92" r="6" fill="#f59e0b"/>
               <circle cx="134" cy="92" r="6" fill="#f59e0b"/>
             </g>
-            <path d="M 142 94 L 126 68" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 142 94 L 126 68" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -829,7 +993,7 @@
               <line x1="106" y1="58" x2="134" y2="72" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <circle cx="142" cy="76" r="7" fill="#f59e0b"/>
             </g>
-            <path d="M 148 90 L 116 74" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 148 90 L 116 74" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -845,7 +1009,7 @@
               <path d="M 102 48 L 118 28 L 126 18" stroke="#e4e4e7" stroke-width="4.5" fill="none" stroke-linecap="round"/>
               <line x1="114" y1="18" x2="140" y2="18" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
             </g>
-            <path d="M 146 22 L 146 52" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 146 22 L 146 52" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -865,7 +1029,7 @@
               <line x1="74" y1="48" x2="102" y2="48" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
               <circle cx="88" cy="48" r="6" fill="#f59e0b"/>
             </g>
-            <path d="M 116 66 L 116 32" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 116 66 L 116 32" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -882,7 +1046,7 @@
               <line x1="112" y1="62" x2="112" y2="38" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <circle cx="112" cy="36" r="6" fill="#f59e0b"/>
             </g>
-            <path d="M 148 56 L 148 24" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 148 56 L 148 24" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -898,7 +1062,7 @@
               <line x1="92" y1="52" x2="122" y2="50" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <circle cx="126" cy="50" r="6" fill="#f59e0b"/>
             </g>
-            <path d="M 106 34 L 144 34" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 106 34 L 144 34" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -915,7 +1079,7 @@
               <path d="M 106 38 L 124 46 L 124 50" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
             </g>
             <circle cx="124" cy="50" r="4.5" fill="#f59e0b"/>
-            <path d="M 152 44 L 152 80" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 152 44 L 152 80" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -932,7 +1096,7 @@
               <path d="M 94 48 L 84 48 L 84 32" stroke="#e4e4e7" stroke-width="4.5" fill="none" stroke-linecap="round"/>
               <circle cx="84" cy="30" r="5.5" fill="#f59e0b"/>
             </g>
-            <path d="M 138 54 L 138 18" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 138 54 L 138 18" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -953,8 +1117,8 @@
               <line x1="118" y1="40" x2="130" y2="74" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <circle cx="131" cy="76" r="5" fill="#f59e0b"/>
             </g>
-            <path d="M 74 74 Q 58 58 64 38" stroke="#10b981" stroke-width="2.5" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
-            <path d="M 146 74 Q 162 58 156 38" stroke="#10b981" stroke-width="2.5" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 74 74 Q 58 58 64 38" stroke="#BFF205" stroke-width="2.5" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 146 74 Q 162 58 156 38" stroke="#BFF205" stroke-width="2.5" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -970,7 +1134,7 @@
               <line x1="122" y1="58" x2="112" y2="92" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <circle cx="111" cy="94" r="5.5" fill="#f59e0b"/>
             </g>
-            <path d="M 120 92 Q 142 84 150 62" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 120 92 Q 142 84 150 62" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -985,7 +1149,7 @@
               <line x1="96" y1="98" x2="110" y2="72" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
               <line x1="124" y1="38" x2="146" y2="66" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
             </g>
-            <path d="M 118 36 L 148 18" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 118 36 L 148 18" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1001,7 +1165,7 @@
               <line x1="116" y1="78" x2="116" y2="112" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
               <circle cx="120" cy="108" r="5.5" fill="#f59e0b"/>
             </g>
-            <path d="M 130 110 Q 156 104 162 78" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 130 110 Q 156 104 162 78" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1017,7 +1181,7 @@
               <line x1="116" y1="78" x2="152" y2="78" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
               <circle cx="150" cy="82" r="5.5" fill="#f59e0b"/>
             </g>
-            <path d="M 158 88 Q 150 110 126 112" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 158 88 Q 150 110 126 112" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1033,7 +1197,7 @@
               <line x1="152" y1="80" x2="184" y2="76" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
               <circle cx="182" cy="72" r="5.5" fill="#f59e0b"/>
             </g>
-            <path d="M 184 64 Q 178 40 152 34" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 184 64 Q 178 40 152 34" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1049,7 +1213,7 @@
               <circle cx="144" cy="64" r="7" fill="#e4e4e7"/>
               <rect x="74" y="56" width="22" height="10" rx="3" fill="#f59e0b"/>
             </g>
-            <path d="M 52 98 L 52 66" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 52 98 L 52 66" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1065,7 +1229,7 @@
               <line x1="114" y1="58" x2="140" y2="66" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <circle cx="142" cy="66" r="5.5" fill="#f59e0b"/>
             </g>
-            <path d="M 152 68 Q 154 44 134 28" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 152 68 Q 154 44 134 28" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1082,7 +1246,7 @@
               <line x1="88" y1="46" x2="62" y2="56" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <circle cx="60" cy="56" r="5.5" fill="#f59e0b"/>
             </g>
-            <path d="M 64 42 Q 80 26 98 30" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 64 42 Q 80 26 98 30" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1098,7 +1262,7 @@
               <line x1="94" y1="68" x2="124" y2="66" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <line x1="118" y1="66" x2="134" y2="66" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
             </g>
-            <path d="M 138 58 L 138 94" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 138 58 L 138 94" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1113,7 +1277,7 @@
               <path d="M 106 48 L 94 22 M 114 48 L 126 22" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
               <rect x="92" y="86" width="36" height="6" rx="2" fill="#f59e0b"/>
             </g>
-            <path d="M 164 80 L 164 38" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 164 80 L 164 38" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1129,7 +1293,7 @@
               <line x1="100" y1="54" x2="132" y2="46" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <circle cx="134" cy="46" r="5" fill="#f59e0b"/>
             </g>
-            <path d="M 142 52 Q 134 84 100 94" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 142 52 Q 134 84 100 94" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1147,7 +1311,7 @@
               <path d="M 118 42 L 136 56 L 126 74" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
               <line x1="86" y1="74" x2="134" y2="74" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
             </g>
-            <path d="M 152 80 L 152 44" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 152 80 L 152 44" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1163,7 +1327,7 @@
               <circle cx="118" cy="20" r="7" fill="#e4e4e7"/>
               <circle cx="106" cy="28" r="6.5" fill="#f59e0b"/>
             </g>
-            <path d="M 148 72 L 148 34" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 148 72 L 148 34" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1180,7 +1344,7 @@
               <line x1="106" y1="74" x2="112" y2="98" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <circle cx="112" cy="100" r="4.5" fill="#f59e0b"/>
             </g>
-            <path d="M 122 96 Q 140 88 148 68" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 122 96 Q 140 88 148 68" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
 
@@ -1195,7 +1359,7 @@
               <line x1="100" y1="72" x2="128" y2="86" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
               <circle cx="130" cy="86" r="6" fill="#f59e0b"/>
             </g>
-            <path d="M 142 84 Q 154 62 138 40" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 142 84 Q 154 62 138 40" stroke="#BFF205" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
       }
@@ -1218,6 +1382,14 @@
       history: [],
       expandedHistory: {},
       workoutStartTime: null,
+      cardioLogs: {}, // key: `${week}_${workoutId}` -> Array<{ id, type, label, duration, sets, reps }>
+      profile: {
+        nickname: 'Максим',
+        age: '',
+        weight: '85',
+        height: '',
+        avatar: ''
+      },
       logs: {} // key: `${week}_${exerciseId}` -> Array<{ isWarmup: boolean, weight: string, reps: string, done: boolean }>
     };
 
@@ -1232,6 +1404,7 @@
     const TIMER_STORAGE_KEY = 'maksim_gym_timer_v1';
 
     let progressChart = null;
+    let caloriesChart = null;
     let confirmCallback = null;
 
     function loadState() {
@@ -1245,6 +1418,8 @@
             state.autoTimer = typeof parsed.autoTimer === 'boolean' ? parsed.autoTimer : true;
             state.completedWorkouts = parsed.completedWorkouts && typeof parsed.completedWorkouts === 'object' ? parsed.completedWorkouts : {};
             state.history = Array.isArray(parsed.history) ? parsed.history : [];
+            state.cardioLogs = parsed.cardioLogs && typeof parsed.cardioLogs === 'object' ? parsed.cardioLogs : {};
+            if (parsed.profile && typeof parsed.profile === 'object') state.profile = { ...state.profile, ...parsed.profile };
             state.logs = parsed.logs && typeof parsed.logs === 'object' ? parsed.logs : {};
           }
         }
@@ -1272,6 +1447,8 @@
           autoTimer: state.autoTimer,
           completedWorkouts: state.completedWorkouts,
           history: state.history,
+          cardioLogs: state.cardioLogs,
+          profile: state.profile,
           logs: state.logs
         }));
       } catch (e) {
@@ -1386,7 +1563,7 @@
     function formatTime(sec) {
       const m = Math.floor(sec / 60);
       const s = sec % 60;
-      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      return `${m}:${String(s).padStart(2, '0')}`;
     }
 
     function renderTimerBar() {
@@ -1396,11 +1573,19 @@
         return;
       }
       bar.classList.remove('hidden');
-      document.getElementById('timer-display').textContent = formatTime(timer.remaining);
-      document.getElementById('timer-exercise-name').textContent = timer.exerciseName;
-      document.getElementById('btn-timer-toggle').textContent = timer.running ? 'Пауза' : 'Старт';
-      const pct = timer.total > 0 ? Math.max(0, Math.min(100, (timer.remaining / timer.total) * 100)) : 0;
-      document.getElementById('timer-progress-bar').style.width = `${pct}%`;
+      const timeStr = formatTime(timer.remaining);
+      const totalStr = formatTime(timer.total || timer.remaining);
+      document.getElementById('timer-display').textContent = timeStr;
+      document.getElementById('timer-total-label').textContent = timer.running ? `з ${totalStr}` : 'ПАУЗА';
+      document.getElementById('timer-heading').textContent = `Наступний підхід через ${timeStr}`;
+      document.getElementById('timer-exercise-name').textContent = timer.exerciseName ? `Дихай рівно • ${timer.exerciseName}` : 'Дихай рівно, відновлюйся.';
+
+      const circumference = 226.19;
+      const ratio = timer.total > 0 ? Math.max(0, Math.min(1, timer.remaining / timer.total)) : 0;
+      const offset = circumference * (1 - ratio);
+      const ring = document.getElementById('timer-ring-circle');
+      ring.style.strokeDashoffset = String(offset);
+      ring.style.stroke = timer.running ? '#BFF205' : '#71717a';
     }
 
     function syncTimerTick() {
@@ -1458,16 +1643,22 @@
       document.getElementById('workout-progress-badge').textContent = `${doneExercises}/${totalEx}`;
       document.getElementById('workout-progress-bar').style.width = `${pct}%`;
 
-      const dot = document.getElementById('auto-timer-dot');
+      const thumb = document.getElementById('auto-timer-thumb');
+      const label = document.getElementById('auto-timer-label');
       const btn = document.getElementById('btn-auto-timer');
+      btn.setAttribute('aria-checked', state.autoTimer ? 'true' : 'false');
       if (state.autoTimer) {
-        dot.className = 'h-2 w-2 rounded-full bg-emerald-400';
-        btn.classList.add('border-emerald-500/40', 'text-emerald-300');
-        btn.classList.remove('border-zinc-700', 'text-zinc-400');
+        thumb.className = 'absolute left-1 top-1 flex h-6 w-8 items-center justify-center rounded-full bg-[#BFF205] text-[9px] font-extrabold text-zinc-950 shadow transition-transform duration-200 translate-x-[98px]';
+        thumb.textContent = 'ON';
+        label.className = 'w-full pr-9 text-center font-display text-[9px] font-bold uppercase tracking-wider text-[#BFF205] pointer-events-none';
+        btn.classList.add('border-[#BFF205]/45');
+        btn.classList.remove('border-zinc-700');
       } else {
-        dot.className = 'h-2 w-2 rounded-full bg-zinc-500';
-        btn.classList.remove('border-emerald-500/40', 'text-emerald-300');
-        btn.classList.add('border-zinc-700', 'text-zinc-400');
+        thumb.className = 'absolute left-1 top-1 flex h-6 w-8 items-center justify-center rounded-full bg-zinc-700 text-[9px] font-extrabold text-zinc-200 shadow transition-transform duration-200 translate-x-0';
+        thumb.textContent = 'OFF';
+        label.className = 'w-full pl-9 text-center font-display text-[9px] font-bold uppercase tracking-wider text-zinc-500 pointer-events-none';
+        btn.classList.remove('border-[#BFF205]/45');
+        btn.classList.add('border-zinc-700');
       }
     }
 
@@ -1480,7 +1671,7 @@
         btn.type = 'button';
         btn.dataset.week = String(w);
         btn.className = active
-          ? 'rounded-lg bg-emerald-500 py-1.5 text-center text-[11px] font-bold text-zinc-950 shadow-sm transition active:scale-95'
+          ? 'rounded-lg bg-[#BFF205] py-1.5 text-center text-[11px] font-bold text-zinc-950 shadow-sm transition active:scale-95'
           : 'rounded-lg border border-zinc-800 bg-zinc-900/90 py-1.5 text-center text-[11px] font-medium text-zinc-400 transition hover:bg-zinc-800 active:scale-95';
         btn.textContent = `Т${w}`;
         weekContainer.appendChild(btn);
@@ -1495,15 +1686,106 @@
         btn.type = 'button';
         btn.dataset.workout = wk.id;
         btn.className = active
-          ? 'relative flex flex-col items-center justify-center rounded-2xl bg-zinc-100 p-2.5 min-h-[78px] text-zinc-950 shadow-md ring-2 ring-emerald-500 transition active:scale-95'
+          ? 'relative flex flex-col items-center justify-center rounded-2xl bg-zinc-100 p-2.5 min-h-[78px] text-zinc-950 shadow-md ring-2 ring-[#BFF205] transition active:scale-95'
           : 'relative flex flex-col items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 p-2.5 min-h-[78px] text-zinc-200 transition hover:bg-zinc-800 active:scale-95';
         btn.innerHTML = `
-          ${isCompleted ? `<span class="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-zinc-950">✓</span>` : ''}
-          <span class="text-lg font-extrabold leading-none tracking-tight">День ${wk.num}</span>
+          ${isCompleted ? `<span class="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#BFF205] text-[10px] font-bold text-zinc-950">✓</span>` : ''}
+          <span class="font-display text-lg font-bold uppercase leading-none tracking-tight">День ${wk.num}</span>
           <span class="mt-1.5 text-center text-[11px] font-semibold leading-tight ${active ? 'text-zinc-700' : 'text-zinc-400'}">${wk.title}</span>
         `;
         workoutContainer.appendChild(btn);
       });
+    }
+
+    const CARDIO_TYPES = {
+      run: { label: 'Біг', met: 9.8, mode: 'duration' },
+      walk: { label: 'Ходьба', met: 3.8, mode: 'duration' },
+      bike: { label: 'Ровер', met: 6.8, mode: 'duration' },
+      row: { label: 'Гребля', met: 7.0, mode: 'duration' },
+      abs: { label: 'Вправи на прес', met: 3.8, mode: 'abs' }
+    };
+
+    function estimateCalories(doneSets, tonnage, cardioItems) {
+      const weightKg = parseFloat(state.profile.weight) || 75;
+      const age = parseFloat(state.profile.age) || 30;
+      const height = parseFloat(state.profile.height) || 175;
+      // Slight metabolic scaling factor from Mifflin-St Jeor vs baseline
+      const bmrFactor = Math.max(0.85, Math.min(1.25, (10 * weightKg + 6.25 * height - 5 * age + 5) / 1800));
+      const kcalPerMinBase = (weightKg * 3.5) / 200;
+
+      // Strength: ~2.0 min per completed set at 4.5 MET + mechanical tonnage work
+      const strengthMin = doneSets * 2.0;
+      const strengthKcal = strengthMin * 4.5 * kcalPerMinBase * bmrFactor + (tonnage * 0.002);
+
+      let cardioKcal = 0;
+      (cardioItems || []).forEach(c => {
+        const meta = CARDIO_TYPES[c.type] || { met: 5.0, mode: 'duration' };
+        if (meta.mode === 'duration') {
+          const mins = parseFloat(c.duration) || 0;
+          cardioKcal += mins * meta.met * kcalPerMinBase * bmrFactor;
+        } else {
+          const sets = parseFloat(c.sets) || 0;
+          const reps = parseFloat(c.reps) || 0;
+          const mins = sets * reps * 0.04;
+          cardioKcal += mins * meta.met * kcalPerMinBase * bmrFactor;
+        }
+      });
+
+      return Math.round(strengthKcal + cardioKcal);
+    }
+
+    function renderCardioList() {
+      const key = `${state.week}_${state.workoutId}`;
+      const items = state.cardioLogs[key] || [];
+      const container = document.getElementById('cardio-list');
+      container.innerHTML = '';
+      items.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900/70 px-4 py-3';
+        const detail = c.mode === 'abs' ? `${c.sets} підх × ${c.reps} повт` : `${c.duration} хв`;
+        div.innerHTML = `
+          <div>
+            <div class="text-sm font-bold text-white">${c.label}</div>
+            <div class="text-xs text-[#BFF205] font-medium">${detail}</div>
+          </div>
+          <button type="button" data-cardio-del="${c.id}" class="rounded-lg border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-400 hover:text-red-400 active:scale-95">✕</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderProfileView() {
+      const p = state.profile;
+      document.getElementById('prof-nickname').value = p.nickname || '';
+      document.getElementById('prof-age').value = p.age || '';
+      document.getElementById('prof-weight').value = p.weight || '';
+      document.getElementById('prof-height').value = p.height || '';
+      document.getElementById('profile-display-name').textContent = p.nickname || 'Атлет';
+
+      const img = document.getElementById('profile-avatar-img');
+      const ph = document.getElementById('profile-avatar-placeholder');
+      const clr = document.getElementById('profile-avatar-clear');
+      if (p.avatar) {
+        img.src = p.avatar;
+        img.classList.remove('hidden');
+        ph.classList.add('hidden');
+        clr.classList.remove('hidden');
+      } else {
+        img.classList.add('hidden');
+        ph.textContent = (p.nickname || 'М').trim().charAt(0).toUpperCase();
+        ph.classList.remove('hidden');
+        clr.classList.add('hidden');
+      }
+
+      const w = parseFloat(p.weight);
+      const h = parseFloat(p.height);
+      const a = parseFloat(p.age);
+      if (w > 0 && h > 0 && a > 0) {
+        const bmr = Math.round(10 * w + 6.25 * h - 5 * a + 5);
+        document.getElementById('profile-bmr-val').textContent = `${bmr} ккал/день`;
+      } else {
+        document.getElementById('profile-bmr-val').textContent = 'Заповни вік, вагу і зріст';
+      }
     }
 
     function renderWorkoutView() {
@@ -1533,7 +1815,7 @@
         const allDone = workingTotal > 0 && workingDone === workingTotal;
 
         const card = document.createElement('div');
-        card.className = `rounded-2xl border p-3.5 transition ${allDone ? 'border-emerald-500/40 bg-emerald-950/15' : 'border-zinc-800 bg-zinc-900/70'}`;
+        card.className = `rounded-2xl border p-3.5 transition ${allDone ? 'border-[#BFF205]/45 bg-[#BFF205]/[0.04]' : 'border-zinc-800 bg-zinc-900/70'}`;
 
         let metaBadges = `<span class="rounded-lg bg-zinc-800 px-2 py-0.5 text-[11px] font-semibold text-zinc-200">${target.sets} підх × ${target.reps} повт</span>`;
         if (target.hasWarmup) {
@@ -1549,7 +1831,7 @@
           const label = s.isWarmup ? 'Р' : String(++workCounter);
           const labelClass = s.isWarmup
             ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-            : (s.done ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-zinc-800 text-zinc-300 border-zinc-700');
+            : (s.done ? 'bg-[#BFF205]/20 text-[#BFF205] border-[#BFF205]/45' : 'bg-zinc-800 text-zinc-300 border-zinc-700');
 
           setsHtml += `
             <div class="grid grid-cols-[32px_1fr_76px_44px] items-center gap-2 py-1">
@@ -1562,7 +1844,7 @@
               <div class="flex items-center rounded-xl border border-zinc-700/80 bg-zinc-950 px-1.5">
                 <input type="number" inputmode="numeric" placeholder="${target.reps}" value="${s.reps}" data-action="input-reps" data-ex="${ex.id}" data-idx="${sIdx}" class="h-10 w-full bg-transparent text-center text-sm font-semibold text-white placeholder-zinc-600 focus:outline-none" />
               </div>
-              <button type="button" data-action="toggle-done" data-ex="${ex.id}" data-idx="${sIdx}" data-rest="${ex.rest}" data-name="${ex.name}" class="flex h-10 w-11 items-center justify-center rounded-xl border transition active:scale-95 ${s.done ? 'border-emerald-500 bg-emerald-500 text-zinc-950 font-bold' : 'border-zinc-700 bg-zinc-800 text-zinc-400 hover:text-white'}">
+              <button type="button" data-action="toggle-done" data-ex="${ex.id}" data-idx="${sIdx}" data-rest="${ex.rest}" data-name="${ex.name}" class="flex h-10 w-11 items-center justify-center rounded-xl border transition active:scale-95 ${s.done ? 'border-[#BFF205] bg-[#BFF205] text-zinc-950 font-bold' : 'border-zinc-700 bg-zinc-800 text-zinc-400 hover:text-white'}">
                 ✓
               </button>
             </div>
@@ -1593,12 +1875,12 @@
               <div class="mt-3 rounded-xl border border-zinc-800/90 bg-zinc-950/70 p-2.5 space-y-2">
                 <button type="button" data-action="toggle-anim" data-ex="${ex.id}" class="relative block w-full overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 text-left transition active:scale-[0.99]">
                   ${isAnim
-                    ? `<div class="relative">${renderExerciseSvg(g.svg)}<span class="absolute top-2 left-2 rounded-full bg-emerald-500/90 px-2.5 py-0.5 text-[10px] font-bold text-zinc-950">▶ Анімація руху • Натисни для фото</span></div>`
-                    : `<div class="relative flex justify-center"><img src="${g.img}" data-thumb="${g.thumb}" data-svg="${g.svg}" alt="${ex.name}" class="h-44 w-full object-contain bg-zinc-950" loading="lazy" /><span class="absolute bottom-2 right-2 rounded-full bg-zinc-900/85 border border-zinc-700 px-2.5 py-1 text-[10px] font-semibold text-emerald-300 backdrop-blur-sm">▶ Анімація руху</span></div>`
+                    ? `<div class="relative flex justify-center bg-white"><img src="${g.gif}" data-thumb="${g.thumb}" data-svg="${g.svg}" alt="${ex.name} анімація" class="h-48 w-full object-contain bg-white" loading="lazy" /><span class="absolute top-2 left-2 rounded-full bg-[#BFF205]/95 px-2.5 py-0.5 text-[10px] font-bold text-zinc-950 shadow">▶ Анімація • Натисни для фото</span></div>`
+                    : `<div class="relative flex justify-center"><img src="${g.img}" data-thumb="${g.thumb}" data-svg="${g.svg}" alt="${ex.name}" class="h-44 w-full object-contain bg-zinc-950" loading="lazy" /><span class="absolute bottom-2 right-2 rounded-full bg-zinc-900/85 border border-zinc-700 px-2.5 py-1 text-[10px] font-semibold text-[#BFF205] backdrop-blur-sm">▶ Анімація руху</span></div>`
                   }
                 </button>
                 <div class="px-0.5 text-[11px] leading-snug text-zinc-300">
-                  <span class="font-semibold text-amber-400">${g.eq}</span> • <span class="text-emerald-400">${g.dir}</span>
+                  <span class="font-semibold text-amber-400">${g.eq}</span> • <span class="text-[#BFF205]">${g.dir}</span>
                 </div>
               </div>
             `;
@@ -1615,7 +1897,7 @@
           </div>
 
           <div class="mt-2 flex items-center justify-between pt-1">
-            <button type="button" data-action="add-set" data-ex="${ex.id}" class="rounded-lg px-2.5 py-1.5 text-xs font-medium text-emerald-400 hover:bg-emerald-500/10 active:scale-95">
+            <button type="button" data-action="add-set" data-ex="${ex.id}" class="rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#BFF205] hover:bg-[#BFF205]/10 active:scale-95">
               + Додати підхід
             </button>
             ${sets.length > (target.sets + (target.hasWarmup ? 1 : 0)) ? `
@@ -1628,6 +1910,7 @@
 
         list.appendChild(card);
       });
+      renderCardioList();
     }
 
     function renderProgressView() {
@@ -1699,10 +1982,10 @@
           datasets: [{
             label: 'Макс. вага (кг)',
             data: maxWeights,
-            borderColor: '#10b981',
-            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+            borderColor: '#BFF205',
+            backgroundColor: 'rgba(191, 242, 5, 0.16)',
             borderWidth: 2.5,
-            pointBackgroundColor: '#10b981',
+            pointBackgroundColor: '#BFF205',
             pointRadius: 4,
             tension: 0.3,
             fill: true,
@@ -1715,6 +1998,53 @@
           plugins: {
             legend: { display: false }
           },
+          scales: {
+            x: {
+              grid: { color: 'rgba(63, 63, 70, 0.3)' },
+              ticks: { color: '#a1a1aa', font: { size: 11 } }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(63, 63, 70, 0.3)' },
+              ticks: { color: '#a1a1aa', font: { size: 11 } }
+            }
+          }
+        }
+      });
+
+      // Render Calories Expenditure Curve from History
+      const calItems = [...(state.history || [])].reverse();
+      const calLabels = calItems.map(it => {
+        try {
+          return new Date(it.date).toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' });
+        } catch (e) { return `Т${it.week}`; }
+      });
+      const calData = calItems.map(it => it.calories || 0);
+      const avgCal = calData.length > 0 ? Math.round(calData.reduce((a, b) => a + b, 0) / calData.length) : 0;
+      document.getElementById('chart-calories-avg').textContent = calData.length > 0 ? `Сер: ~${avgCal} ккал` : 'Заверши тренування';
+
+      const calCtx = document.getElementById('calories-chart').getContext('2d');
+      if (caloriesChart) caloriesChart.destroy();
+      caloriesChart = new Chart(calCtx, {
+        type: 'line',
+        data: {
+          labels: calLabels.length ? calLabels : ['Немає даних'],
+          datasets: [{
+            label: 'Калорії (ккал)',
+            data: calData.length ? calData : [0],
+            borderColor: '#fb7185',
+            backgroundColor: 'rgba(251, 113, 133, 0.15)',
+            borderWidth: 2.5,
+            pointBackgroundColor: '#fb7185',
+            pointRadius: 4,
+            tension: 0.35,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
           scales: {
             x: {
               grid: { color: 'rgba(63, 63, 70, 0.3)' },
@@ -1796,12 +2126,16 @@
 
         let detailsHtml = '';
         if (isOpen && Array.isArray(item.exercises)) {
+          const cardioHtml = (item.cardio || []).map(c => {
+            const det = c.mode === 'abs' ? `${c.sets} підх × ${c.reps} повт` : `${c.duration} хв`;
+            return `<div class="flex items-center justify-between text-xs"><span class="font-semibold text-[#BFF205]">+ ${c.label}</span><span class="text-zinc-300">${det}</span></div>`;
+          }).join('');
           detailsHtml = `<div class="pt-2 border-t border-zinc-800/80 space-y-2">` + item.exercises.map(ex => {
             const setTags = (ex.sets || []).map((s, i) => {
               const lbl = s.isWarmup ? 'Р' : `${i + 1}`;
               const w = s.weight ? `${s.weight} кг` : '—';
               const r = s.reps ? `× ${s.reps}` : '';
-              return `<span class="inline-flex items-center gap-1 rounded-lg border ${s.done ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-zinc-800 bg-zinc-950 text-zinc-400'} px-2 py-0.5 text-[11px] font-medium">${lbl}: ${w} ${r}</span>`;
+              return `<span class="inline-flex items-center gap-1 rounded-lg border ${s.done ? 'border-[#BFF205]/35 bg-[#BFF205]/10 text-[#BFF205]' : 'border-zinc-800 bg-zinc-950 text-zinc-400'} px-2 py-0.5 text-[11px] font-medium">${lbl}: ${w} ${r}</span>`;
             }).join('');
             return `
               <div class="space-y-1">
@@ -1809,23 +2143,24 @@
                 <div class="flex flex-wrap gap-1">${setTags}</div>
               </div>
             `;
-          }).join('') + `</div>`;
+          }).join('') + (cardioHtml ? `<div class="pt-1.5 border-t border-zinc-800/60 space-y-1">${cardioHtml}</div>` : '') + `</div>`;
         }
 
         card.innerHTML = `
           <div class="flex items-start justify-between gap-2">
             <button type="button" data-hist-toggle="${item.id}" class="flex-1 text-left">
               <div class="flex items-center gap-2">
-                <span class="rounded-md bg-emerald-500/15 px-2 py-0.5 text-[11px] font-bold text-emerald-400">Тиждень ${item.week}</span>
+                <span class="rounded-md bg-[#BFF205]/15 px-2 py-0.5 text-[11px] font-bold text-[#BFF205]">Тиждень ${item.week}</span>
                 <span class="text-[11px] text-zinc-400">${formatHistoryDate(item.date)}</span>
               </div>
               <div class="mt-1 text-sm font-bold text-white">День ${item.workoutNum}. ${item.workoutTitle}</div>
               <div class="mt-1 flex flex-wrap gap-2 text-xs text-zinc-400">
                 <span>${item.doneEx}/${item.totalEx} вправ</span>
                 <span>•</span>
-                <span class="text-emerald-400 font-medium">${item.doneSets} підх.</span>
+                <span class="text-[#BFF205] font-medium">${item.doneSets} підх.</span>
                 <span>•</span>
                 <span class="text-amber-400 font-medium">${item.tonnage} кг</span>
+                ${item.calories ? `<span>•</span><span class="text-rose-400 font-medium">~${item.calories} ккал</span>` : ''}
                 ${item.durationMin ? `<span>•</span><span>⏱ ${item.durationMin} хв</span>` : ''}
               </div>
             </button>
@@ -1847,11 +2182,12 @@
       document.getElementById('view-workout').classList.toggle('hidden', tab !== 'workout');
       document.getElementById('view-history').classList.toggle('hidden', tab !== 'history');
       document.getElementById('view-progress').classList.toggle('hidden', tab !== 'progress');
+      document.getElementById('view-profile').classList.toggle('hidden', tab !== 'profile');
       document.getElementById('view-data').classList.toggle('hidden', tab !== 'data');
 
       document.querySelectorAll('.nav-tab').forEach(btn => {
         const isCurrent = btn.dataset.tab === tab;
-        btn.classList.toggle('text-emerald-400', isCurrent);
+        btn.classList.toggle('text-[#BFF205]', isCurrent);
         btn.classList.toggle('font-semibold', isCurrent);
         btn.classList.toggle('text-zinc-400', !isCurrent);
         btn.classList.toggle('font-medium', !isCurrent);
@@ -1861,6 +2197,7 @@
       if (tab === 'history') renderHistoryView();
       if (tab === 'progress') renderProgressView();
       if (tab === 'data') renderDataView();
+      if (tab === 'profile') renderProfileView();
     }
 
     function setupEvents() {
@@ -1880,11 +2217,32 @@
         renderWorkoutView();
       });
 
-      document.getElementById('btn-auto-timer').addEventListener('click', () => {
-        state.autoTimer = !state.autoTimer;
+      const autoTimerEl = document.getElementById('btn-auto-timer');
+      let swipeStartX = null;
+      let swiped = false;
+      function setAutoTimer(val) {
+        if (state.autoTimer === val) return;
+        state.autoTimer = val;
         saveState();
         renderHeader();
         showToast(state.autoTimer ? 'Автотаймер увімкнено' : 'Автотаймер вимкнено');
+      }
+      autoTimerEl.addEventListener('touchstart', e => {
+        swipeStartX = e.touches[0].clientX;
+        swiped = false;
+      }, { passive: true });
+      autoTimerEl.addEventListener('touchmove', e => {
+        if (swipeStartX === null) return;
+        const dx = e.touches[0].clientX - swipeStartX;
+        if (Math.abs(dx) > 18) {
+          swiped = true;
+          setAutoTimer(dx > 0);
+          swipeStartX = null;
+        }
+      }, { passive: true });
+      autoTimerEl.addEventListener('click', () => {
+        if (swiped) { swiped = false; return; }
+        setAutoTimer(!state.autoTimer);
       });
 
       document.getElementById('btn-quick-copy-prev').addEventListener('click', () => {
@@ -2089,6 +2447,8 @@
           doneSets,
           tonnage: Math.round(tonnage)
         };
+        const cardioItems = state.cardioLogs[`${state.week}_${workout.id}`] || [];
+        const calories = estimateCalories(doneSets, tonnage, cardioItems);
         const durationMin = state.workoutStartTime
           ? Math.max(1, Math.round((Date.now() - state.workoutStartTime) / 60000))
           : null;
@@ -2104,7 +2464,9 @@
           totalEx: workout.exercises.length,
           doneSets,
           tonnage: Math.round(tonnage),
+          calories,
           durationMin,
+          cardio: cardioItems.map(c => ({ ...c })),
           exercises: snapshotExercises
         });
         saveState();
@@ -2115,6 +2477,7 @@
         document.getElementById('sum-exercises').textContent = `${doneEx}/${workout.exercises.length}`;
         document.getElementById('sum-sets').textContent = String(doneSets);
         document.getElementById('sum-tonnage').textContent = `${Math.round(tonnage)} кг`;
+        document.getElementById('sum-calories').textContent = `~${calories} ккал`;
         const modal = document.getElementById('summary-modal');
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -2142,13 +2505,99 @@
         const delBtn = e.target.closest('button[data-hist-del]');
         if (delBtn) {
           const id = delBtn.dataset.histDel;
+          const targetItem = state.history.find(x => x.id === id);
           openConfirm('Видалити запис?', 'Видалити це тренування з історії?', () => {
             state.history = state.history.filter(x => x.id !== id);
+            if (targetItem) {
+              const stillExists = state.history.some(x => x.week === targetItem.week && x.workoutId === targetItem.workoutId);
+              if (!stillExists) {
+                delete state.completedWorkouts[`${targetItem.week}_${targetItem.workoutId}`];
+              }
+            }
             saveState();
             renderHistoryView();
+            renderPills();
             showToast('Запис видалено');
           });
         }
+      });
+
+      // Cardio dropdown & list events
+      document.getElementById('btn-toggle-cardio').addEventListener('click', () => {
+        document.getElementById('cardio-dropdown-panel').classList.toggle('hidden');
+      });
+      document.getElementById('btn-cardio-cancel').addEventListener('click', () => {
+        document.getElementById('cardio-dropdown-panel').classList.add('hidden');
+      });
+      document.getElementById('cardio-type-select').addEventListener('change', e => {
+        const isAbs = e.target.value === 'abs';
+        document.getElementById('cardio-duration-wrap').classList.toggle('hidden', isAbs);
+        document.getElementById('cardio-abs-wrap').classList.toggle('hidden', !isAbs);
+      });
+      document.getElementById('btn-cardio-save').addEventListener('click', () => {
+        const type = document.getElementById('cardio-type-select').value;
+        const meta = CARDIO_TYPES[type];
+        const key = `${state.week}_${state.workoutId}`;
+        if (!Array.isArray(state.cardioLogs[key])) state.cardioLogs[key] = [];
+        if (meta.mode === 'abs') {
+          const sets = parseInt(document.getElementById('cardio-sets-input').value, 10) || 3;
+          const reps = parseInt(document.getElementById('cardio-reps-input').value, 10) || 15;
+          state.cardioLogs[key].push({ id: 'c_' + Date.now(), type, label: meta.label, mode: 'abs', sets, reps });
+        } else {
+          const duration = parseInt(document.getElementById('cardio-duration-input').value, 10) || 15;
+          state.cardioLogs[key].push({ id: 'c_' + Date.now(), type, label: meta.label, mode: 'duration', duration });
+        }
+        saveState();
+        renderCardioList();
+        document.getElementById('cardio-dropdown-panel').classList.add('hidden');
+        showToast(`Додано: ${meta.label}`);
+      });
+      document.getElementById('cardio-list').addEventListener('click', e => {
+        const btn = e.target.closest('button[data-cardio-del]');
+        if (!btn) return;
+        const id = btn.dataset.cardioDel;
+        const key = `${state.week}_${state.workoutId}`;
+        state.cardioLogs[key] = (state.cardioLogs[key] || []).filter(c => c.id !== id);
+        saveState();
+        renderCardioList();
+      });
+
+      // Profile inputs & avatar upload
+      ['prof-nickname', 'prof-age', 'prof-weight', 'prof-height'].forEach(id => {
+        document.getElementById(id).addEventListener('input', e => {
+          const field = id.replace('prof-', '');
+          state.profile[field] = e.target.value;
+          saveState();
+          renderProfileView();
+        });
+      });
+      document.getElementById('profile-avatar-input').addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxDim = 240;
+            let w = img.width, h = img.height;
+            if (w > h && w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; }
+            else if (h >= w && h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            state.profile.avatar = canvas.toDataURL('image/jpeg', 0.8);
+            saveState();
+            renderProfileView();
+            showToast('Фото профілю оновлено');
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+      document.getElementById('profile-avatar-clear').addEventListener('click', () => {
+        state.profile.avatar = '';
+        saveState();
+        renderProfileView();
       });
 
       // Progress selectors
@@ -2157,7 +2606,7 @@
 
       // Data / Backup actions
       document.getElementById('btn-export-download').addEventListener('click', () => {
-        const blob = new Blob([JSON.stringify({ logs: state.logs, history: state.history, completedWorkouts: state.completedWorkouts, exportedAt: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+        const blob = new Blob([JSON.stringify({ logs: state.logs, history: state.history, completedWorkouts: state.completedWorkouts, cardioLogs: state.cardioLogs, profile: state.profile, exportedAt: new Date().toISOString() }, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -2170,7 +2619,7 @@
       });
 
       document.getElementById('btn-export-copy').addEventListener('click', () => {
-        const text = JSON.stringify({ logs: state.logs, history: state.history, completedWorkouts: state.completedWorkouts });
+        const text = JSON.stringify({ logs: state.logs, history: state.history, completedWorkouts: state.completedWorkouts, cardioLogs: state.cardioLogs, profile: state.profile });
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(() => showToast('JSON скопійовано')).catch(() => fallbackCopy(text));
         } else {
@@ -2207,6 +2656,8 @@
           state.logs = logs;
           if (Array.isArray(parsed.history)) state.history = parsed.history;
           if (parsed.completedWorkouts && typeof parsed.completedWorkouts === 'object') state.completedWorkouts = parsed.completedWorkouts;
+          if (parsed.cardioLogs && typeof parsed.cardioLogs === 'object') state.cardioLogs = parsed.cardioLogs;
+          if (parsed.profile && typeof parsed.profile === 'object') state.profile = { ...state.profile, ...parsed.profile };
           saveState();
           renderDataView();
           showToast('Дані успішно відновлено!');
