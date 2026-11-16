@@ -39,26 +39,35 @@
     input[type="number"] { -moz-appearance: textfield; }
     .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
     .safe-top { padding-top: env(safe-area-inset-top, 0px); }
-    @keyframes exPulseUp {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-14px); }
-    }
-    @keyframes exPulseDown {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(14px); }
-    }
-    @keyframes exPulseDiag {
-      0%, 100% { transform: translate(0px, 0px); }
-      50% { transform: translate(12px, -10px); }
-    }
-    @keyframes exArrowBeat {
-      0%, 100% { opacity: 0.45; transform: scale(0.96); }
-      50% { opacity: 1; transform: scale(1.05); }
-    }
-    .anim-up { animation: exPulseUp 1.8s ease-in-out infinite; }
-    .anim-down { animation: exPulseDown 1.8s ease-in-out infinite; }
-    .anim-diag { animation: exPulseDiag 1.8s ease-in-out infinite; }
-    .anim-arrow { animation: exArrowBeat 1.8s ease-in-out infinite; transform-origin: center; }
+    @keyframes swingCW55 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(55deg); } }
+    @keyframes swingCCW65 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-65deg); } }
+    @keyframes swingCCW80 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-80deg); } }
+    @keyframes swingCW75 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(75deg); } }
+    @keyframes swingL { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(72deg); } }
+    @keyframes swingR { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-72deg); } }
+    @keyframes moveUp18 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+    @keyframes moveDown18 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(20px); } }
+    @keyframes moveUp10 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @keyframes moveRight22 { 0%, 100% { transform: translateX(0px); } 50% { transform: translateX(22px); } }
+    @keyframes moveDiag20 { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(18px, -14px); } }
+    @keyframes movePullBack { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(-12px, -14px); } }
+    @keyframes muscleGlow { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.95; } }
+    @keyframes arrowBeat { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+
+    .j-cw55 { animation: swingCW55 2s ease-in-out infinite; }
+    .j-ccw65 { animation: swingCCW65 2s ease-in-out infinite; }
+    .j-ccw80 { animation: swingCCW80 2s ease-in-out infinite; }
+    .j-cw75 { animation: swingCW75 2s ease-in-out infinite; }
+    .j-lat-l { animation: swingL 2s ease-in-out infinite; }
+    .j-lat-r { animation: swingR 2s ease-in-out infinite; }
+    .m-up18 { animation: moveUp18 2s ease-in-out infinite; }
+    .m-down18 { animation: moveDown18 2s ease-in-out infinite; }
+    .m-up10 { animation: moveUp10 2s ease-in-out infinite; }
+    .m-right22 { animation: moveRight22 2s ease-in-out infinite; }
+    .m-diag20 { animation: moveDiag20 2s ease-in-out infinite; }
+    .m-pullback { animation: movePullBack 2s ease-in-out infinite; }
+    .muscle-pulse { animation: muscleGlow 2s ease-in-out infinite; }
+    .anim-arrow { animation: arrowBeat 2s ease-in-out infinite; }
   </style>
 </head>
 <body class="min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-emerald-500/30">
@@ -766,312 +775,437 @@
           <marker id="arrG" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
             <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981"/>
           </marker>
-          <marker id="arrB" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-            <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
-          </marker>
         </defs>
       `;
-      const floor = `<line x1="12" y1="114" x2="208" y2="114" stroke="#3f3f46" stroke-width="2" stroke-linecap="round"/>`;
+      const floor = `<line x1="12" y1="116" x2="208" y2="116" stroke="#3f3f46" stroke-width="2" stroke-linecap="round"/>`;
       let body = '';
+      let muscleLabel = '';
 
       switch (type) {
         case 'hyperextension':
+          muscleLabel = 'Поперек • Сідниці';
           body = `
-            <path d="M 48 114 L 88 74 L 112 74 M 72 90 L 66 114" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <rect x="78" y="68" width="26" height="8" rx="3" fill="#71717a"/>
-            <line x1="56" y1="104" x2="94" y2="72" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
-            <line x1="94" y1="72" x2="146" y2="54" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="156" cy="48" r="7" fill="#e4e4e7"/>
-            <line x1="94" y1="72" x2="132" y2="96" stroke="#71717a" stroke-width="4" stroke-dasharray="3 3" stroke-linecap="round"/>
-            <path d="M 142 94 Q 162 76 154 58" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 44 116 L 88 76 L 112 76 M 70 92 L 64 116" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <rect x="78" y="70" width="24" height="8" rx="3" fill="#71717a"/>
+            <line x1="54" y1="106" x2="92" y2="76" stroke="#d4d4d8" stroke-width="6.5" stroke-linecap="round"/>
+            <g class="j-ccw65" style="transform-origin: 92px 76px;">
+              <line x1="92" y1="76" x2="132" y2="96" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+              <line x1="96" y1="76" x2="118" y2="87" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" class="muscle-pulse"/>
+              <circle cx="142" cy="100" r="7" fill="#e4e4e7"/>
+              <path d="M 122 90 L 128 102" stroke="#d4d4d8" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="128" cy="104" r="5" fill="#f59e0b"/>
+            </g>
+            <path d="M 148 94 Q 162 72 146 52" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'barbell_row':
         case 'yates_row':
+          muscleLabel = 'Найширші спини • Ромбоподібні';
           body = `
-            <line x1="78" y1="114" x2="86" y2="76" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
-            <line x1="86" y1="76" x2="124" y2="54" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="134" cy="46" r="7" fill="#e4e4e7"/>
-            <line x1="120" y1="58" x2="114" y2="86" stroke="#e4e4e7" stroke-width="4" stroke-linecap="round"/>
-            <line x1="98" y1="88" x2="132" y2="88" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
-            <circle cx="98" cy="88" r="6" fill="#f59e0b"/>
-            <circle cx="132" cy="88" r="6" fill="#f59e0b"/>
-            <path d="M 136 96 L 116 68" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <line x1="74" y1="116" x2="84" y2="76" stroke="#d4d4d8" stroke-width="6.5" stroke-linecap="round"/>
+            <line x1="84" y1="76" x2="126" y2="54" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <line x1="92" y1="70" x2="118" y2="56" stroke="#f43f5e" stroke-width="5.5" stroke-linecap="round" class="muscle-pulse"/>
+            <circle cx="136" cy="46" r="7" fill="#e4e4e7"/>
+            <g class="m-pullback">
+              <path d="M 120 58 L 116 74 L 114 90" stroke="#e4e4e7" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+              <line x1="96" y1="92" x2="134" y2="92" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
+              <circle cx="96" cy="92" r="6" fill="#f59e0b"/>
+              <circle cx="134" cy="92" r="6" fill="#f59e0b"/>
+            </g>
+            <path d="M 142 94 L 126 68" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'lever_row':
+          muscleLabel = 'Середина спини • Найширші';
           body = `
-            <path d="M 55 114 L 55 62 L 135 96 L 135 114" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="65" y1="114" x2="78" y2="78" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
-            <line x1="78" y1="78" x2="110" y2="56" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="118" cy="48" r="7" fill="#e4e4e7"/>
-            <line x1="104" y1="60" x2="140" y2="74" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
-            <circle cx="146" cy="76" r="7" fill="#f59e0b"/>
-            <path d="M 142 90 L 106 72" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 52 116 L 52 64 L 136 96 L 136 116" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="64" y1="116" x2="78" y2="78" stroke="#d4d4d8" stroke-width="6.5" stroke-linecap="round"/>
+            <line x1="78" y1="78" x2="112" y2="54" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <line x1="86" y1="72" x2="108" y2="58" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" class="muscle-pulse"/>
+            <circle cx="120" cy="46" r="7" fill="#e4e4e7"/>
+            <g class="m-pullback">
+              <line x1="106" y1="58" x2="134" y2="72" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="142" cy="76" r="7" fill="#f59e0b"/>
+            </g>
+            <path d="M 148 90 L 116 74" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'hammer_pulldown':
+          muscleLabel = 'Найширші м’язи спини';
           body = `
-            <path d="M 66 114 L 66 28 L 150 28 M 96 114 L 96 78 L 124 78" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="100" y1="78" x2="100" y2="48" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 64 116 L 64 24 L 154 24 M 96 116 L 96 80 L 124 80" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="100" y1="80" x2="100" y2="48" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <line x1="97" y1="54" x2="97" y2="72" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
             <circle cx="100" cy="36" r="7" fill="#e4e4e7"/>
-            <path d="M 100 78 L 128 78 L 128 114" stroke="#d4d4d8" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <line x1="104" y1="48" x2="122" y2="24" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="148" cy="40" r="7" fill="#f59e0b"/>
-            <path d="M 134 24 L 120 52" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 100 80 L 128 80 L 128 116" stroke="#d4d4d8" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+            <g class="m-down18">
+              <path d="M 102 48 L 118 28 L 126 18" stroke="#e4e4e7" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+              <line x1="114" y1="18" x2="140" y2="18" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+            </g>
+            <path d="M 146 22 L 146 52" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'bench_press':
         case 'dumbbell_bench':
+        case 'smith_close_grip':
+          muscleLabel = type === 'smith_close_grip' ? 'Тріцепс • Грудні' : 'Грудні м’язи • Тріцепс';
           body = `
-            <path d="M 52 114 L 52 84 L 166 84 L 166 114" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <rect x="50" y="78" width="118" height="7" rx="3" fill="#71717a"/>
-            <line x1="68" y1="75" x2="132" y2="75" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="54" cy="72" r="7" fill="#e4e4e7"/>
-            <path d="M 132 75 L 154 75 L 160 112" stroke="#d4d4d8" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <line x1="88" y1="72" x2="88" y2="40" stroke="#e4e4e7" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="88" cy="36" r="7" fill="#f59e0b"/>
-            <path d="M 108 62 L 108 32" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 52 116 L 52 86 L 166 86 L 166 116" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <rect x="50" y="80" width="118" height="7" rx="3" fill="#71717a"/>
+            <line x1="68" y1="77" x2="132" y2="77" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <line x1="80" y1="74" x2="104" y2="74" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" class="muscle-pulse"/>
+            <circle cx="54" cy="73" r="7" fill="#e4e4e7"/>
+            <path d="M 132 77 L 154 77 L 160 114" stroke="#d4d4d8" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+            <g class="m-up18">
+              <line x1="88" y1="74" x2="88" y2="48" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <line x1="74" y1="48" x2="102" y2="48" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
+              <circle cx="88" cy="48" r="6" fill="#f59e0b"/>
+            </g>
+            <path d="M 116 66 L 116 32" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'incline_bench':
         case 'incline_fly':
+          muscleLabel = 'Верх грудних м’язів';
           body = `
-            <path d="M 58 114 L 74 86 L 130 56 M 120 114 L 120 62" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="76" y1="84" x2="122" y2="58" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="132" cy="48" r="7" fill="#e4e4e7"/>
-            <path d="M 76 84 L 52 96 L 46 114" stroke="#d4d4d8" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <line x1="112" y1="60" x2="112" y2="28" stroke="#e4e4e7" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="112" cy="24" r="6.5" fill="#f59e0b"/>
-            <path d="M 148 52 L 148 24" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 58 116 L 74 88 L 130 58 M 120 116 L 120 64" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="76" y1="86" x2="122" y2="60" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <line x1="98" y1="71" x2="116" y2="61" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" class="muscle-pulse"/>
+            <circle cx="132" cy="50" r="7" fill="#e4e4e7"/>
+            <path d="M 76 86 L 52 98 L 46 116" stroke="#d4d4d8" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+            <g class="m-up18">
+              <line x1="112" y1="62" x2="112" y2="38" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="112" cy="36" r="6" fill="#f59e0b"/>
+            </g>
+            <path d="M 148 56 L 148 24" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
-        case 'smith_close_grip':
-          body = `
-            <path d="M 72 114 L 72 20 M 148 114 L 148 20" stroke="#52525b" stroke-width="4" fill="none"/>
-            <rect x="64" y="80" width="92" height="7" rx="3" fill="#71717a"/>
-            <line x1="80" y1="76" x2="132" y2="76" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="68" cy="72" r="7" fill="#e4e4e7"/>
-            <line x1="94" y1="74" x2="94" y2="44" stroke="#e4e4e7" stroke-width="4" stroke-linecap="round"/>
-            <line x1="68" y1="44" x2="152" y2="44" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
-            <path d="M 118 66 L 118 32" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
-          `;
-          break;
+
         case 'hammer_chest_press':
+          muscleLabel = 'Грудні м’язи';
           body = `
-            <path d="M 72 114 L 72 44 L 84 44 L 84 82 L 118 82" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="88" y1="80" x2="88" y2="46" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 70 116 L 70 44 L 84 44 L 84 82 L 118 82" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="88" y1="80" x2="88" y2="46" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <line x1="91" y1="50" x2="91" y2="64" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
             <circle cx="88" cy="34" r="7" fill="#e4e4e7"/>
-            <path d="M 88 80 L 118 80 L 120 112" stroke="#d4d4d8" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <line x1="92" y1="50" x2="136" y2="48" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="144" cy="48" r="7" fill="#f59e0b"/>
-            <path d="M 106 36 L 142 36" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 88 80 L 118 80 L 120 114" stroke="#d4d4d8" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+            <g class="m-right22">
+              <line x1="92" y1="52" x2="122" y2="50" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="126" cy="50" r="6" fill="#f59e0b"/>
+            </g>
+            <path d="M 106 34 L 144 34" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'hammer_dip':
         case 'tricep_dips':
+          muscleLabel = 'Тріцепс • Низ грудей';
           body = `
-            <path d="M 76 114 L 76 48 L 136 48 M 136 114 L 136 48" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="106" y1="36" x2="106" y2="74" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="106" cy="24" r="7" fill="#e4e4e7"/>
-            <line x1="106" y1="74" x2="106" y2="102" stroke="#d4d4d8" stroke-width="5" stroke-linecap="round"/>
-            <line x1="106" y1="40" x2="122" y2="54" stroke="#e4e4e7" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="124" cy="54" r="4" fill="#f59e0b"/>
-            <path d="M 152 44 L 152 80" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
-            <path d="M 60 80 L 60 44" stroke="#38bdf8" stroke-width="2.5" fill="none" marker-end="url(#arrB)"/>
+            <path d="M 76 116 L 76 50 L 136 50 M 136 116 L 136 50" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <g class="m-down18">
+              <line x1="106" y1="34" x2="106" y2="70" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+              <line x1="110" y1="40" x2="110" y2="54" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
+              <circle cx="106" cy="22" r="7" fill="#e4e4e7"/>
+              <line x1="106" y1="70" x2="106" y2="94" stroke="#d4d4d8" stroke-width="5.5" stroke-linecap="round"/>
+              <path d="M 106 38 L 124 46 L 124 50" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
+            </g>
+            <circle cx="124" cy="50" r="4.5" fill="#f59e0b"/>
+            <path d="M 152 44 L 152 80" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'seated_db_press':
         case 'ohp_barbell':
+          muscleLabel = 'Передня та середня дельти';
           body = `
-            <path d="M 78 114 L 78 78 L 122 78" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="94" y1="78" x2="94" y2="48" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 78 116 L 78 78 L 122 78" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="94" y1="78" x2="94" y2="48" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="94" cy="48" r="5" fill="#f43f5e" class="muscle-pulse"/>
             <circle cx="94" cy="36" r="7" fill="#e4e4e7"/>
-            <path d="M 94 78 L 122 78 L 124 112" stroke="#d4d4d8" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <line x1="88" y1="48" x2="88" y2="20" stroke="#e4e4e7" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="88" cy="18" r="6" fill="#f59e0b"/>
-            <path d="M 136 52 L 136 18" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 94 78 L 122 78 L 124 114" stroke="#d4d4d8" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+            <g class="m-up18">
+              <path d="M 94 48 L 84 48 L 84 32" stroke="#e4e4e7" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+              <circle cx="84" cy="30" r="5.5" fill="#f59e0b"/>
+            </g>
+            <path d="M 138 54 L 138 18" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'lateral_raise':
+          muscleLabel = 'Середня дельта';
           body = `
-            <line x1="102" y1="112" x2="106" y2="74" stroke="#d4d4d8" stroke-width="5" stroke-linecap="round"/>
-            <line x1="118" y1="112" x2="114" y2="74" stroke="#d4d4d8" stroke-width="5" stroke-linecap="round"/>
-            <line x1="110" y1="74" x2="110" y2="38" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <line x1="102" y1="114" x2="106" y2="74" stroke="#d4d4d8" stroke-width="5.5" stroke-linecap="round"/>
+            <line x1="118" y1="114" x2="114" y2="74" stroke="#d4d4d8" stroke-width="5.5" stroke-linecap="round"/>
+            <line x1="110" y1="74" x2="110" y2="38" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="98" cy="40" r="4.5" fill="#f43f5e" class="muscle-pulse"/>
+            <circle cx="122" cy="40" r="4.5" fill="#f43f5e" class="muscle-pulse"/>
             <circle cx="110" cy="26" r="7" fill="#e4e4e7"/>
-            <line x1="106" y1="42" x2="66" y2="46" stroke="#e4e4e7" stroke-width="4" stroke-linecap="round"/>
-            <line x1="114" y1="42" x2="154" y2="46" stroke="#e4e4e7" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="64" cy="46" r="5" fill="#f59e0b"/>
-            <circle cx="156" cy="46" r="5" fill="#f59e0b"/>
-            <path d="M 68 78 Q 52 62 60 40" stroke="#10b981" stroke-width="2.5" fill="none" marker-end="url(#arrG)"/>
-            <path d="M 152 78 Q 168 62 160 40" stroke="#10b981" stroke-width="2.5" fill="none" marker-end="url(#arrG)"/>
+            <g class="j-lat-l" style="transform-origin: 102px 40px;">
+              <line x1="102" y1="40" x2="90" y2="74" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="89" cy="76" r="5" fill="#f59e0b"/>
+            </g>
+            <g class="j-lat-r" style="transform-origin: 118px 40px;">
+              <line x1="118" y1="40" x2="130" y2="74" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="131" cy="76" r="5" fill="#f59e0b"/>
+            </g>
+            <path d="M 74 74 Q 58 58 64 38" stroke="#10b981" stroke-width="2.5" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
+            <path d="M 146 74 Q 162 58 156 38" stroke="#10b981" stroke-width="2.5" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'rear_delt_fly':
         case 'prone_db_fly':
+          muscleLabel = 'Задня дельта';
           body = `
-            <path d="M 68 114 L 84 82 L 134 56" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="84" y1="80" x2="128" y2="56" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 68 116 L 84 82 L 134 56" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="84" y1="80" x2="128" y2="56" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="122" cy="58" r="5" fill="#f43f5e" class="muscle-pulse"/>
             <circle cx="138" cy="48" r="7" fill="#e4e4e7"/>
-            <line x1="122" y1="60" x2="108" y2="92" stroke="#e4e4e7" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="106" cy="94" r="5.5" fill="#f59e0b"/>
-            <path d="M 114 92 Q 134 86 144 66" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <g class="j-ccw65" style="transform-origin: 122px 58px;">
+              <line x1="122" y1="58" x2="112" y2="92" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="111" cy="94" r="5.5" fill="#f59e0b"/>
+            </g>
+            <path d="M 120 92 Q 142 84 150 62" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'leg_press':
+          muscleLabel = 'Квадріцепс • Сідниці';
           body = `
-            <path d="M 52 114 L 74 84 L 154 34" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="138" y1="22" x2="164" y2="54" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
-            <line x1="68" y1="88" x2="96" y2="98" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 50 116 L 72 86 L 156 32" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="68" y1="88" x2="96" y2="98" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
             <circle cx="60" cy="80" r="7" fill="#e4e4e7"/>
-            <path d="M 96 98 L 122 66 L 146 42" stroke="#d4d4d8" stroke-width="6" fill="none" stroke-linecap="round"/>
-            <path d="M 116 42 L 146 24" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <g class="m-diag20">
+              <path d="M 96 98 L 110 72 L 132 54" stroke="#d4d4d8" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+              <line x1="96" y1="98" x2="110" y2="72" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
+              <line x1="124" y1="38" x2="146" y2="66" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+            </g>
+            <path d="M 118 36 L 148 18" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'leg_extension':
+          muscleLabel = 'Квадріцепс';
           body = `
-            <path d="M 68 114 L 68 46 M 68 80 L 114 80 L 114 114" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="78" y1="78" x2="78" y2="46" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 68 116 L 68 46 M 68 80 L 114 80 L 114 116" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="78" y1="78" x2="78" y2="46" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
             <circle cx="78" cy="34" r="7" fill="#e4e4e7"/>
-            <path d="M 78 78 L 114 78 L 154 74" stroke="#d4d4d8" stroke-width="6" fill="none" stroke-linecap="round"/>
-            <circle cx="152" cy="78" r="5.5" fill="#f59e0b"/>
-            <path d="M 124 108 Q 152 106 160 80" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <line x1="78" y1="78" x2="116" y2="78" stroke="#d4d4d8" stroke-width="6.5" stroke-linecap="round"/>
+            <line x1="84" y1="75" x2="112" y2="75" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
+            <g class="j-ccw80" style="transform-origin: 116px 78px;">
+              <line x1="116" y1="78" x2="116" y2="112" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="120" cy="108" r="5.5" fill="#f59e0b"/>
+            </g>
+            <path d="M 130 110 Q 156 104 162 78" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'seated_leg_curl':
+          muscleLabel = 'Біцепс стегна (задня поверхня)';
           body = `
-            <path d="M 68 114 L 68 46 M 68 80 L 114 80 L 114 114" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="78" y1="78" x2="78" y2="46" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 68 116 L 68 46 M 68 80 L 114 80 L 114 116" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="78" y1="78" x2="78" y2="46" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
             <circle cx="78" cy="34" r="7" fill="#e4e4e7"/>
-            <path d="M 78 78 L 114 78 L 122 110" stroke="#d4d4d8" stroke-width="6" fill="none" stroke-linecap="round"/>
-            <circle cx="122" cy="108" r="5.5" fill="#f59e0b"/>
-            <path d="M 154 84 Q 148 106 128 110" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <line x1="78" y1="78" x2="116" y2="78" stroke="#d4d4d8" stroke-width="6.5" stroke-linecap="round"/>
+            <line x1="84" y1="81" x2="112" y2="81" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
+            <g class="j-cw75" style="transform-origin: 116px 78px;">
+              <line x1="116" y1="78" x2="152" y2="78" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="150" cy="82" r="5.5" fill="#f59e0b"/>
+            </g>
+            <path d="M 158 88 Q 150 110 126 112" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'lying_leg_curl':
+          muscleLabel = 'Біцепс стегна (задня поверхня)';
           body = `
-            <path d="M 52 114 L 62 84 L 154 84 L 164 114" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="66" y1="78" x2="118" y2="78" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="54" cy="74" r="7" fill="#e4e4e7"/>
-            <path d="M 118 78 L 154 78 L 140 44" stroke="#d4d4d8" stroke-width="6" fill="none" stroke-linecap="round"/>
-            <circle cx="140" cy="42" r="5.5" fill="#f59e0b"/>
-            <path d="M 164 78 Q 168 52 146 38" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 52 116 L 62 86 L 154 86 L 164 116" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="66" y1="80" x2="118" y2="80" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="54" cy="76" r="7" fill="#e4e4e7"/>
+            <line x1="118" y1="80" x2="152" y2="80" stroke="#d4d4d8" stroke-width="6.5" stroke-linecap="round"/>
+            <line x1="122" y1="76" x2="148" y2="76" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
+            <g class="j-ccw80" style="transform-origin: 152px 80px;">
+              <line x1="152" y1="80" x2="184" y2="76" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="182" cy="72" r="5.5" fill="#f59e0b"/>
+            </g>
+            <path d="M 184 64 Q 178 40 152 34" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'donkey_calf':
         case 'seated_calf':
+          muscleLabel = 'Литкові м’язи';
           body = `
-            <rect x="64" y="102" width="32" height="12" rx="2" fill="#52525b"/>
-            <line x1="80" y1="102" x2="86" y2="66" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
-            <line x1="86" y1="66" x2="132" y2="64" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="144" cy="62" r="7" fill="#e4e4e7"/>
-            <rect x="74" y="54" width="22" height="10" rx="3" fill="#f59e0b"/>
-            <path d="M 54 98 L 54 66" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <rect x="64" y="104" width="32" height="12" rx="2" fill="#52525b"/>
+            <g class="m-up10">
+              <line x1="80" y1="104" x2="86" y2="68" stroke="#d4d4d8" stroke-width="6.5" stroke-linecap="round"/>
+              <line x1="82" y1="100" x2="84" y2="84" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" class="muscle-pulse"/>
+              <line x1="86" y1="68" x2="132" y2="66" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+              <circle cx="144" cy="64" r="7" fill="#e4e4e7"/>
+              <rect x="74" y="56" width="22" height="10" rx="3" fill="#f59e0b"/>
+            </g>
+            <path d="M 52 98 L 52 66" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'preacher_curl':
+          muscleLabel = 'Біцепс (ізольовано)';
           body = `
-            <path d="M 68 114 L 68 78 L 116 54 L 116 114" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="74" y1="76" x2="84" y2="44" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="88" cy="32" r="7" fill="#e4e4e7"/>
-            <path d="M 88 46 L 114 56 L 136 38" stroke="#e4e4e7" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-            <circle cx="138" cy="36" r="5.5" fill="#f59e0b"/>
-            <path d="M 146 68 Q 152 48 138 30" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 68 116 L 68 80 L 116 56 L 116 116" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="74" y1="78" x2="84" y2="46" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="88" cy="34" r="7" fill="#e4e4e7"/>
+            <line x1="88" y1="48" x2="114" y2="58" stroke="#e4e4e7" stroke-width="5" stroke-linecap="round"/>
+            <line x1="94" y1="47" x2="110" y2="53" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
+            <g class="j-ccw80" style="transform-origin: 114px 58px;">
+              <line x1="114" y1="58" x2="140" y2="66" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="142" cy="66" r="5.5" fill="#f59e0b"/>
+            </g>
+            <path d="M 152 68 Q 154 44 134 28" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'skull_crusher':
+          muscleLabel = 'Тріцепс';
           body = `
-            <rect x="52" y="82" width="114" height="7" rx="3" fill="#71717a"/>
-            <path d="M 62 114 L 62 88 M 156 114 L 156 88" stroke="#52525b" stroke-width="4"/>
-            <line x1="72" y1="76" x2="134" y2="76" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="58" cy="72" r="7" fill="#e4e4e7"/>
-            <path d="M 88 74 L 88 44 L 64 56" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <circle cx="62" cy="56" r="5.5" fill="#f59e0b"/>
-            <path d="M 68 44 Q 82 32 98 36" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <rect x="52" y="84" width="114" height="7" rx="3" fill="#71717a"/>
+            <path d="M 62 116 L 62 90 M 156 116 L 156 90" stroke="#52525b" stroke-width="4"/>
+            <line x1="72" y1="78" x2="134" y2="78" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="58" cy="74" r="7" fill="#e4e4e7"/>
+            <line x1="88" y1="76" x2="88" y2="46" stroke="#e4e4e7" stroke-width="5" stroke-linecap="round"/>
+            <line x1="91" y1="50" x2="91" y2="70" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" class="muscle-pulse"/>
+            <g class="j-cw75" style="transform-origin: 88px 46px;">
+              <line x1="88" y1="46" x2="62" y2="56" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="60" cy="56" r="5.5" fill="#f59e0b"/>
+            </g>
+            <path d="M 64 42 Q 80 26 98 30" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'cable_pushdown':
+          muscleLabel = 'Тріцепс';
           body = `
-            <path d="M 152 114 L 152 18 L 122 18" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="126" y1="18" x2="126" y2="62" stroke="#71717a" stroke-width="2" stroke-dasharray="3 2"/>
-            <line x1="88" y1="112" x2="88" y2="44" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="88" cy="32" r="7" fill="#e4e4e7"/>
-            <path d="M 90 48 L 96 68 L 124 68" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="118" y1="68" x2="134" y2="68" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
-            <path d="M 134 56 L 134 92" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 152 116 L 152 18 L 122 18" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="86" y1="114" x2="86" y2="44" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="86" cy="32" r="7" fill="#e4e4e7"/>
+            <line x1="88" y1="48" x2="94" y2="68" stroke="#e4e4e7" stroke-width="5" stroke-linecap="round"/>
+            <line x1="85" y1="50" x2="90" y2="66" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" class="muscle-pulse"/>
+            <g class="j-cw55" style="transform-origin: 94px 68px;">
+              <line x1="94" y1="68" x2="124" y2="66" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <line x1="118" y1="66" x2="134" y2="66" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
+            </g>
+            <path d="M 138 58 L 138 94" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'graviton_pullup':
+          muscleLabel = 'Найширші спини • Біцепс';
           body = `
-            <path d="M 68 114 L 68 20 L 152 20 L 152 114" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="110" y1="42" x2="110" y2="78" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="110" cy="32" r="7" fill="#e4e4e7"/>
-            <path d="M 106 42 L 94 20 M 114 42 L 126 20" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <rect x="92" y="84" width="36" height="6" rx="2" fill="#f59e0b"/>
-            <path d="M 164 78 L 164 38" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <path d="M 68 116 L 68 20 L 152 20 L 152 116" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <g class="m-up18">
+              <line x1="110" y1="48" x2="110" y2="82" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+              <line x1="106" y1="52" x2="106" y2="70" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
+              <circle cx="110" cy="38" r="7" fill="#e4e4e7"/>
+              <path d="M 106 48 L 94 22 M 114 48 L 126 22" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <rect x="92" y="86" width="36" height="6" rx="2" fill="#f59e0b"/>
+            </g>
+            <path d="M 164 80 L 164 38" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'rope_pullover':
+          muscleLabel = 'Найширші спини';
           body = `
-            <path d="M 158 114 L 158 20 L 130 20" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="134" y1="20" x2="118" y2="54" stroke="#71717a" stroke-width="2" stroke-dasharray="3 2"/>
-            <line x1="72" y1="112" x2="80" y2="76" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
-            <line x1="80" y1="76" x2="104" y2="50" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 158 116 L 158 20 L 130 20" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="72" y1="114" x2="80" y2="76" stroke="#d4d4d8" stroke-width="6.5" stroke-linecap="round"/>
+            <line x1="80" y1="76" x2="104" y2="50" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <line x1="86" y1="72" x2="100" y2="56" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" class="muscle-pulse"/>
             <circle cx="112" cy="40" r="7" fill="#e4e4e7"/>
-            <line x1="100" y1="54" x2="122" y2="58" stroke="#e4e4e7" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="122" cy="58" r="4.5" fill="#f59e0b"/>
-            <path d="M 134 54 Q 128 84 96 92" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <g class="j-cw55" style="transform-origin: 100px 54px;">
+              <line x1="100" y1="54" x2="132" y2="46" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="134" cy="46" r="5" fill="#f59e0b"/>
+            </g>
+            <path d="M 142 52 Q 134 84 100 94" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'upright_row':
+          muscleLabel = 'Середня дельта • Трапеція';
           body = `
-            <line x1="102" y1="112" x2="104" y2="74" stroke="#d4d4d8" stroke-width="5" stroke-linecap="round"/>
-            <line x1="118" y1="112" x2="116" y2="74" stroke="#d4d4d8" stroke-width="5" stroke-linecap="round"/>
-            <line x1="110" y1="74" x2="110" y2="38" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <line x1="102" y1="114" x2="104" y2="74" stroke="#d4d4d8" stroke-width="5.5" stroke-linecap="round"/>
+            <line x1="118" y1="114" x2="116" y2="74" stroke="#d4d4d8" stroke-width="5.5" stroke-linecap="round"/>
+            <line x1="110" y1="74" x2="110" y2="38" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="98" cy="40" r="4.5" fill="#f43f5e" class="muscle-pulse"/>
+            <circle cx="122" cy="40" r="4.5" fill="#f43f5e" class="muscle-pulse"/>
             <circle cx="110" cy="26" r="7" fill="#e4e4e7"/>
-            <path d="M 104 42 L 82 54 L 94 74" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <path d="M 116 42 L 138 54 L 126 74" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="86" y1="74" x2="134" y2="74" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
-            <path d="M 152 78 L 152 44" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <g class="m-up18">
+              <path d="M 102 42 L 84 56 L 94 74" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M 118 42 L 136 56 L 126 74" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <line x1="86" y1="74" x2="134" y2="74" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
+            </g>
+            <path d="M 152 80 L 152 44" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'squat':
+          muscleLabel = 'Квадріцепс • Сідниці';
           body = `
-            <path d="M 64 114 L 64 36" stroke="#52525b" stroke-width="4" stroke-linecap="round"/>
-            <path d="M 96 112 L 116 90 L 92 78" stroke="#d4d4d8" stroke-width="6" fill="none" stroke-linecap="round"/>
-            <line x1="92" y1="78" x2="112" y2="46" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="118" cy="36" r="7" fill="#e4e4e7"/>
-            <circle cx="106" cy="44" r="7" fill="#f59e0b"/>
-            <path d="M 142 74 L 142 36" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
-            <path d="M 154 36 L 154 74" stroke="#38bdf8" stroke-width="2.5" fill="none" marker-end="url(#arrB)"/>
+            <path d="M 62 116 L 62 36" stroke="#52525b" stroke-width="4" stroke-linecap="round"/>
+            <line x1="94" y1="114" x2="112" y2="88" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
+            <g class="m-down18">
+              <line x1="112" y1="72" x2="92" y2="62" stroke="#d4d4d8" stroke-width="6.5" stroke-linecap="round"/>
+              <line x1="92" y1="62" x2="112" y2="30" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
+              <line x1="96" y1="64" x2="110" y2="70" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
+              <circle cx="118" cy="20" r="7" fill="#e4e4e7"/>
+              <circle cx="106" cy="28" r="6.5" fill="#f59e0b"/>
+            </g>
+            <path d="M 148 72 L 148 34" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
+
         case 'cable_kickback':
+          muscleLabel = 'Тріцепс';
           body = `
-            <path d="M 56 114 L 56 26 M 56 84 L 92 84" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <line x1="128" y1="112" x2="122" y2="76" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round"/>
-            <line x1="122" y1="76" x2="94" y2="54" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 56 116 L 56 26 M 56 84 L 92 84" stroke="#52525b" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <line x1="128" y1="114" x2="122" y2="76" stroke="#d4d4d8" stroke-width="6.5" stroke-linecap="round"/>
+            <line x1="122" y1="76" x2="94" y2="54" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
             <circle cx="84" cy="46" r="7" fill="#e4e4e7"/>
-            <path d="M 98 56 L 106 74 L 136 66" stroke="#e4e4e7" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <circle cx="138" cy="66" r="4.5" fill="#f59e0b"/>
-            <path d="M 114 88 Q 134 86 144 68" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <line x1="98" y1="56" x2="106" y2="74" stroke="#e4e4e7" stroke-width="5" stroke-linecap="round"/>
+            <line x1="101" y1="56" x2="108" y2="70" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" class="muscle-pulse"/>
+            <g class="j-ccw65" style="transform-origin: 106px 74px;">
+              <line x1="106" y1="74" x2="112" y2="98" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="112" cy="100" r="4.5" fill="#f59e0b"/>
+            </g>
+            <path d="M 122 96 Q 140 88 148 68" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
-        default: // barbell_curl, seated_db_curl, db_curl_supination, hammer_curl, reverse_curl
+
+        default: // curls: barbell_curl, seated_db_curl, db_curl_supination, hammer_curl, reverse_curl
+          muscleLabel = type === 'hammer_curl' || type === 'reverse_curl' ? 'Біцепс • Передпліччя' : 'Біцепс';
           body = `
-            <line x1="94" y1="112" x2="94" y2="44" stroke="#e4e4e7" stroke-width="6" stroke-linecap="round"/>
+            <line x1="94" y1="114" x2="94" y2="44" stroke="#e4e4e7" stroke-width="7" stroke-linecap="round"/>
             <circle cx="94" cy="32" r="7" fill="#e4e4e7"/>
-            <path d="M 98 46 L 102 72 L 130 56" stroke="#e4e4e7" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-            <circle cx="132" cy="54" r="6" fill="#f59e0b"/>
-            <path d="M 138 82 Q 152 64 138 42" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+            <line x1="98" y1="46" x2="100" y2="72" stroke="#e4e4e7" stroke-width="5" stroke-linecap="round"/>
+            <line x1="101" y1="50" x2="102" y2="66" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" class="muscle-pulse"/>
+            <g class="j-ccw80" style="transform-origin: 100px 72px;">
+              <line x1="100" y1="72" x2="128" y2="86" stroke="#e4e4e7" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="130" cy="86" r="6" fill="#f59e0b"/>
+            </g>
+            <path d="M 142 84 Q 154 62 138 40" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#arrG)" class="anim-arrow"/>
           `;
           break;
       }
 
-      const animatedBody = body
-        .replace(/marker-end="url\(#arrG\)"/g, 'marker-end="url(#arrG)" class="anim-arrow"')
-        .replace(/fill="#f59e0b"/g, 'fill="#f59e0b" class="anim-up"');
-      return `<svg viewBox="0 0 220 124" class="w-full h-44 rounded-xl bg-zinc-950">${defs}${floor}${animatedBody}</svg>`;
+      return `
+        <div class="relative">
+          <svg viewBox="0 0 220 124" class="w-full h-44 rounded-xl bg-zinc-950">${defs}${floor}${body}</svg>
+          <span class="absolute bottom-2 right-2 rounded-full bg-rose-500/20 border border-rose-500/40 px-2.5 py-0.5 text-[10px] font-semibold text-rose-300">${muscleLabel}</span>
+        </div>
+      `;
     }
 
     let state = {
@@ -1083,6 +1217,7 @@
       completedWorkouts: {},
       history: [],
       expandedHistory: {},
+      workoutStartTime: null,
       logs: {} // key: `${week}_${exerciseId}` -> Array<{ isWarmup: boolean, weight: string, reps: string, done: boolean }>
     };
 
@@ -1617,8 +1752,10 @@
       try {
         const d = new Date(iso);
         return d.toLocaleString('uk-UA', {
-          day: 'numeric',
-          month: 'short',
+          weekday: 'short',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
           hour: '2-digit',
           minute: '2-digit'
         });
@@ -1689,13 +1826,14 @@
                 <span class="text-emerald-400 font-medium">${item.doneSets} підх.</span>
                 <span>•</span>
                 <span class="text-amber-400 font-medium">${item.tonnage} кг</span>
+                ${item.durationMin ? `<span>•</span><span>⏱ ${item.durationMin} хв</span>` : ''}
               </div>
             </button>
-            <div class="flex items-center gap-1 shrink-0">
+            <div class="flex items-center gap-1.5 shrink-0">
               <button type="button" data-hist-toggle="${item.id}" class="rounded-lg border border-zinc-700 bg-zinc-800 px-2.5 py-1.5 text-xs font-medium text-zinc-300 active:scale-95">
                 ${isOpen ? 'Згорнути' : 'Деталі'}
               </button>
-              <button type="button" data-hist-del="${item.id}" class="rounded-lg border border-zinc-800 bg-zinc-950 px-2 py-1.5 text-xs text-zinc-500 hover:text-red-400 active:scale-95">✕</button>
+              <button type="button" data-hist-del="${item.id}" title="Видалити тренування" class="rounded-lg border border-red-900/50 bg-red-950/30 px-2.5 py-1.5 text-xs font-medium text-red-400 hover:bg-red-900/40 active:scale-95">Видалити</button>
             </div>
           </div>
           ${detailsHtml}
@@ -1815,6 +1953,7 @@
           saveState();
           renderWorkoutView();
         } else if (action === 'toggle-done') {
+          if (!state.workoutStartTime) state.workoutStartTime = Date.now();
           sets[idx].done = !sets[idx].done;
           saveState();
           renderWorkoutView();
@@ -1950,6 +2089,10 @@
           doneSets,
           tonnage: Math.round(tonnage)
         };
+        const durationMin = state.workoutStartTime
+          ? Math.max(1, Math.round((Date.now() - state.workoutStartTime) / 60000))
+          : null;
+        state.workoutStartTime = null;
         state.history.unshift({
           id: 'h_' + Date.now(),
           date: nowIso,
@@ -1961,6 +2104,7 @@
           totalEx: workout.exercises.length,
           doneSets,
           tonnage: Math.round(tonnage),
+          durationMin,
           exercises: snapshotExercises
         });
         saveState();
